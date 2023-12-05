@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_2"
+    android:padding="16dp"
+    tools:context=".RegisterActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:background="@color/brown_gold"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_regisUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="64dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/tv_regisUsername"
+            android:textColor="@color/brown_gold"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_logo" />
+
+        <EditText
+            android:id="@+id/edt_regisUser"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_edittext"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="@string/hint_username"
+            android:textColor="@color/brown_gold"
+            android:paddingHorizontal="16dp"
+            android:textColorHint="@color/brown_gold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_regisUser" />
+
+        <TextView
+            android:id="@+id/tv_regisEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/tv_regisEmail"
+            android:textColor="@color/brown_gold"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_regisUser" />
+
+        <EditText
+            android:id="@+id/edt_regisEmail"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_edittext"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="@string/hint_regisEmail"
+            android:textColor="@color/brown_gold"
+            android:paddingHorizontal="16dp"
+            android:textColorHint="@color/brown_gold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_regisEmail" />
+
+        <TextView
+            android:id="@+id/tv_regisPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/tv_pass"
+            android:textColor="@color/brown_gold"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_regisEmail" />
+
+        <EditText
+            android:id="@+id/edt_regisPass"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_edittext"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="@string/hint_regisPass"
+            android:textColor="@color/brown_gold"
+            android:paddingHorizontal="16dp"
+            android:textColorHint="@color/brown_gold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_regisPass" />
+
+        <TextView
+            android:id="@+id/tv_regisConPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/tv_conPass"
+            android:textColor="@color/brown_gold"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_regisPass" />
+
+        <EditText
+            android:id="@+id/edt_regisConPass"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_edittext"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="@string/hint_regisConPass"
+            android:textColor="@color/brown_gold"
+            android:paddingHorizontal="16dp"
+            android:textColorHint="@color/brown_gold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_regisConPass" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/tv_regisNote"
+            android:textColor="@color/brown_gold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_regisConPass" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_regis"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="54dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Register"
+            app:layout_constraintTop_toBottomOf="@+id/edt_regisConPass" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_regisGmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btnngmail"
+            android:fontFamily="@font/poppins_medium"
+            android:shadowColor="@color/black"
+            android:text="Sign up With Gmail"
+            android:textColor="@color/brown_gold"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/group_14"
+            app:iconGravity="textEnd"
+            app:layout_constraintTop_toBottomOf="@+id/btn_regis" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
