@@ -1,9 +1,10 @@
-package com.capstoneproject.clothizeapp
+package com.capstoneproject.clothizeapp.ui.register
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityRegisterBinding
+import com.capstoneproject.clothizeapp.ui.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {
 

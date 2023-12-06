@@ -1,8 +1,9 @@
-package com.capstoneproject.clothizeapp
+package com.capstoneproject.clothizeapp.ui.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.capstoneproject.clothizeapp.ui.register.RegisterActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
