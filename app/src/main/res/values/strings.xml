@@ -13,4 +13,6 @@
     <string name="hint_regisEmail"><font size="14">example@mail.com</font></string>
     <string name="tv_regisEmail">Email</string>
     <string name="tv_regisUsername">Username</string>
+    <string name="btn_login">Login</string>
+    <string name="sign_in_with_gmail">Sign in With Gmail</string>
 </resources>
