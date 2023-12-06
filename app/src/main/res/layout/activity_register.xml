@@ -12,6 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+id/btn_regisBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/bg_btnback"
+            android:src="@drawable/ic_back_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
         <ImageView
             android:id="@+id/img_logo"
             android:layout_width="wrap_content"
@@ -130,7 +141,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
+            android:paddingHorizontal="16dp"
             android:text="@string/tv_regisNote"
             android:textColor="@color/brown_gold"
             app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +171,8 @@
             android:text="Sign up With Gmail"
             android:textColor="@color/brown_gold"
             app:cornerRadius="12dp"
-            app:icon="@drawable/group_14"
+            app:icon="@drawable/ic_google"
+            app:iconTintMode="multiply"
             app:iconGravity="textEnd"
             app:layout_constraintTop_toBottomOf="@+id/btn_regis" />
 
