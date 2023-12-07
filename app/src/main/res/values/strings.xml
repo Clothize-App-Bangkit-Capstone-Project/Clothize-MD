@@ -15,4 +15,6 @@
     <string name="tv_regisUsername">Username</string>
     <string name="btn_login">Login</string>
     <string name="sign_in_with_gmail">Sign in With Gmail</string>
+    <string name="btn_register">btn_register</string>
+    <string name="register">Register</string>
 </resources>

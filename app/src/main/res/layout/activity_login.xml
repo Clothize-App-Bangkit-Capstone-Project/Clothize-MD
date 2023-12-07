@@ -5,13 +5,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/background_login"
+    android:background="@drawable/bg_login"
     tools:context=".ui.login.LoginActivity"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
+        android:clipToPadding="false"
         >
 
         <com.airbnb.lottie.LottieAnimationView
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="27dp"
-            android:fontFamily="@font/poppins_bold"
+            android:fontFamily="@font/poppins_medium"
             android:text="@string/tv_Username"
             android:textColor="@color/brown_gold"
             android:textSize="18sp"
@@ -66,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_bold"
+            android:fontFamily="@font/poppins_medium"
             android:text="@string/tv_pass"
             android:textColor="@color/brown_gold"
             android:textSize="18sp"
@@ -88,8 +89,9 @@
             android:textColorHint="@color/brown_gold"
             app:layout_constraintTop_toBottomOf="@+id/tv_pass" />
 
-        <Button
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/btn_login"
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:layout_width="match_parent"
             android:textSize="18sp"
             android:layout_height="60dp"
@@ -97,7 +99,8 @@
             android:layout_marginTop="54dp"
             android:fontFamily="@font/poppins_medium"
             android:text="@string/btn_login"
-            android:elevation="10dp"
+            android:textColor="@color/white"
+            app:cornerRadius="30dp"
             android:backgroundTint="@color/brown_gold"
             app:layout_constraintTop_toBottomOf="@+id/edt_pass" />
 
@@ -116,12 +119,13 @@
             app:icon="@drawable/ic_google"
             app:iconTintMode="multiply"
             app:iconGravity="textEnd"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/btn_login" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/btn_gmail">
@@ -139,6 +143,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
+                android:layout_marginStart="4dp"
                 android:fontFamily="@font/poppins_regular"
                 android:text="@string/tv_regis"
                 android:textColor="@color/brown_gold" />
