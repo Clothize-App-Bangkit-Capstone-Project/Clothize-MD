@@ -11,14 +11,14 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
-import com.capstoneproject.clothizeapp.data.local.preferences.client.ClientPrefViewModel
-import com.capstoneproject.clothizeapp.data.local.preferences.client.UserPreferences
-import com.capstoneproject.clothizeapp.data.local.preferences.client.ClientPreferencesFactory
-import com.capstoneproject.clothizeapp.data.local.preferences.client.ClientSession
-import com.capstoneproject.clothizeapp.data.local.preferences.client.dataStore
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferencesFactory
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientSession
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.UserPreferences
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.dataStore
+import com.capstoneproject.clothizeapp.client.ui.custom_view.CustomPasswordEditText
+import com.capstoneproject.clothizeapp.client.ui.login.LoginActivity
 import com.capstoneproject.clothizeapp.databinding.FragmentProfileBinding
-import com.capstoneproject.clothizeapp.ui.custom_view.CustomPasswordEditText
-import com.capstoneproject.clothizeapp.ui.login.LoginActivity
 
 
 class ProfileFragment : Fragment() {

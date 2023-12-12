@@ -3,8 +3,8 @@ package com.capstoneproject.clothizeapp.client.ui.client.profile
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.capstoneproject.clothizeapp.data.repository.AuthRepository
-import com.capstoneproject.clothizeapp.di.AuthInjection
+import com.capstoneproject.clothizeapp.client.data.repository.AuthRepository
+import com.capstoneproject.clothizeapp.client.di.AuthInjection
 
 class ProfileViewModelFactory private constructor(private val authRepository: AuthRepository) :
     ViewModelProvider.Factory{
