@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.capstoneproject.clothizeapp.R
+import com.capstoneproject.clothizeapp.client.ui.login.LoginActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityRegisterBinding
-import com.capstoneproject.clothizeapp.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth

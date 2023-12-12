@@ -3,8 +3,8 @@ package com.capstoneproject.clothizeapp.client.ui.client.measurements
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.capstoneproject.clothizeapp.data.repository.MeasurementRepository
-import com.capstoneproject.clothizeapp.di.MeasurementInjection
+import com.capstoneproject.clothizeapp.client.data.repository.MeasurementRepository
+import com.capstoneproject.clothizeapp.client.di.MeasurementInjection
 
 class MeasurementViewModelFactory private constructor(private val measurementRepository: MeasurementRepository) :
     ViewModelProvider.Factory{

@@ -13,8 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
+import com.capstoneproject.clothizeapp.client.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityMeasurementBinding
-import com.capstoneproject.clothizeapp.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.utils.getImageUri
 
 class MeasurementActivity : AppCompatActivity() {

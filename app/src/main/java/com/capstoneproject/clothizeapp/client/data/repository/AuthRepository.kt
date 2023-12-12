@@ -1,6 +1,6 @@
 package com.capstoneproject.clothizeapp.client.data.repository
 
-import com.capstoneproject.clothizeapp.api.auth.ApiAuthService
+import com.capstoneproject.clothizeapp.client.api.auth.ApiAuthService
 
 class AuthRepository(
     private val apiAuthService: ApiAuthService,

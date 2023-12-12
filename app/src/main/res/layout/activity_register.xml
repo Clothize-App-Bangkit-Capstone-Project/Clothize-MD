@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_register"
     android:padding="16dp"
-    tools:context=".ui.register.RegisterActivity">
+    tools:context=".client.ui.register.RegisterActivity">
     
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -114,7 +114,7 @@
                 app:startIconTint="@color/brown_gold"
                 app:layout_constraintTop_toBottomOf="@+id/tv_regisEmail">
 
-                <com.capstoneproject.clothizeapp.ui.custom_view.CustomEmailEditText
+                <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomEmailEditText
                     android:id="@+id/emailRegis"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -156,7 +156,7 @@
                 app:startIconTint="@color/brown_gold"
                 app:layout_constraintTop_toBottomOf="@+id/tv_regisPass">
 
-                <com.capstoneproject.clothizeapp.ui.custom_view.CustomPasswordEditText
+                <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomPasswordEditText
                     android:id="@+id/passwordRegis"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -198,7 +198,7 @@
                 app:startIconTint="@color/brown_gold"
                 app:layout_constraintTop_toBottomOf="@+id/tv_regisConPass">
 
-                <com.capstoneproject.clothizeapp.ui.custom_view.CustomPasswordEditText
+                <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomPasswordEditText
                     android:id="@+id/passwordRegisConfirm"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
