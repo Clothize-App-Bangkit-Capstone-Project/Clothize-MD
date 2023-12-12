@@ -116,7 +116,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tipe"
+                    android:text="@string/type"
                     android:textSize="18sp"
                     android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/brown_gold"

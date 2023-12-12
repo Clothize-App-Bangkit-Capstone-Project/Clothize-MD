@@ -181,10 +181,9 @@
                     android:contentDescription="@string/user_photo" />
             </com.google.android.material.card.MaterialCardView>
 
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_open_camera"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:textSize="16sp"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="16dp"
@@ -193,6 +192,23 @@
                 android:text="@string/btn_open_camera"
                 android:textColor="@color/white"
                 android:background="@drawable/bg_button_primary"
+                app:layout_constraintEnd_toEndOf="@id/cardView"
+                app:layout_constraintStart_toEndOf="@id/btn_gallery"
+                app:layout_constraintTop_toBottomOf="@id/cardView" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_gallery"
+                android:layout_width="0dp"
+                android:textSize="16sp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/open_gallery"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_button_primary"
+                app:layout_constraintStart_toStartOf="@id/cardView"
+                app:layout_constraintEnd_toStartOf="@id/btn_open_camera"
                 app:layout_constraintTop_toBottomOf="@id/cardView" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -201,7 +217,7 @@
                 android:textSize="16sp"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/poppins_bold"
                 android:text="@string/btn_back_measurement"
                 android:textColor="@color/brown_gold"

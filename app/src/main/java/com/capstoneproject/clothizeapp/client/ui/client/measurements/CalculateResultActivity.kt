@@ -1,4 +1,4 @@
-package com.capstoneproject.clothizeapp.ui.client.measurements
+package com.capstoneproject.clothizeapp.client.ui.client.measurements
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

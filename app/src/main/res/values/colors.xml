@@ -9,4 +9,5 @@
     <color name="green_finish">#54FF45</color>
     <color name="gray_pending">#B5B5B5</color>
     <color name="red_rejected">#FF7373</color>
+    <color name="dark_brown">#664A17</color>
 </resources>

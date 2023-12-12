@@ -33,7 +33,7 @@
 
 
         <TextView
-            android:id="@+id/tv_user"
+            android:id="@+id/tv_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -45,21 +45,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
-        <EditText
-            android:id="@+id/edt_username"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_edittext"
-            android:fontFamily="@font/poppins_regular"
-            android:hint="@string/hint_username"
-            android:maxLines="1"
-            android:textSize="14sp"
-            android:textColor="@color/brown_gold"
-            android:paddingHorizontal="16dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailUsernameTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
             android:textColorHint="@color/brown_gold"
-            app:layout_constraintTop_toBottomOf="@+id/tv_user" />
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:startIconDrawable="@drawable/baseline_person_24"
+            app:startIconTint="@color/brown_gold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailUsernameEdt"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:ems="10"
+                android:textColor="@color/brown_gold"
+                android:maxLines="1"
+                android:fontFamily="@font/poppins_regular"
+                android:textColorHint="@color/brown_gold"
+                android:inputType="text"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/border_edit_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/tv_pass"
@@ -72,22 +85,36 @@
             android:textColor="@color/brown_gold"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_username" />
+            app:layout_constraintTop_toBottomOf="@+id/emailUsernameTIL" />
 
-        <EditText
-            android:id="@+id/edt_pass"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passTIL"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/brown_gold"
             android:layout_marginHorizontal="16dp"
-            android:background="@drawable/bg_edittext"
-            android:fontFamily="@font/poppins_regular"
-            android:hint="@string/hint_pass"
-            android:maxLines="1"
-            android:textColor="@color/brown_gold"
-            android:paddingHorizontal="16dp"
-            android:textSize="14sp"
-            android:textColorHint="@color/brown_gold"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pass" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:startIconDrawable="@drawable/baseline_password_24"
+            app:startIconTint="@color/brown_gold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pass">
+
+            <com.capstoneproject.clothizeapp.ui.custom_view.CustomPasswordEditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:ems="10"
+                android:textColor="@color/brown_gold"
+                android:maxLines="1"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_regular"
+                android:textColorHint="@color/brown_gold"
+                android:inputType="textPassword"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/border_edit_text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/btn_login"
@@ -96,13 +123,13 @@
             android:textSize="18sp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="54dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="@font/poppins_medium"
             android:text="@string/btn_login"
             android:textColor="@color/white"
             app:cornerRadius="30dp"
             android:backgroundTint="@color/brown_gold"
-            app:layout_constraintTop_toBottomOf="@+id/edt_pass" />
+            app:layout_constraintTop_toBottomOf="@+id/passTIL" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_gmail"
