@@ -13,4 +13,56 @@
     <string name="hint_regisEmail"><font size="14">example@mail.com</font></string>
     <string name="tv_regisEmail">Email</string>
     <string name="tv_regisUsername">Username</string>
+    <string name="btn_login">Login</string>
+    <string name="sign_in_with_gmail">Sign in With Gmail</string>
+    <string name="btn_register">btn_register</string>
+    <string name="register">Register</string>
+    <string name="rules">\n
+        1.\tAllow the app to access the camera and \n\t\tgallery.\n
+        2.\tEnsure a stable internet connection.\n
+        3.\tTake photos of only the upper body.\n
+        4.\tDistance between camera and body \n\t\t\t+- 100 cm
+    </string>
+    <string name="btn_open_camera">Open Camera</string>
+    <string name="btn_back_measurement">Back</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="gender">Gender</string>
+    <string name="short_type">Short</string>
+    <string name="long_type">Long</string>
+    <string name="type">Arm Length</string>
+    <string name="user_photo">user photo</string>
+    <string name="title_image">Image</string>
+    <string name="btn_calculate">Calculate</string>
+    <string name="hasil_perhitungan_cm">Results (cm)</string>
+    <string name="xl">XL</string>
+    <string name="ukuran_pakaian">Apparel Size</string>
+    <string name="kemeja">Kemeja</string>
+    <string name="jenis_pakaian">Clothing Type</string>
+    <string name="calculating_result">Calculating Result</string>
+    <string name="chest_girth">Chest girth</string>
+    <string name="body_girth">Body girth</string>
+    <string name="body_length">Body length</string>
+    <string name="shoulder_width">Shoulder width</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="menu_measurement">menu measurement</string>
+    <string name="not_fill">Must be fill</string>
+    <string name="email_not_valid">Email not valid</string>
+    <string name="password_invalid">Password at least 8 characters</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="calculating_history">Calculating History</string>
+    <string name="change_photo"><u>Change photo</u></string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="edit">Edit</string>
+    <string name="logout">Logout</string>
+    <string name="open_gallery">Open Gallery</string>
+    <string name="dialog_register">Registration Success!\nPlease verify your email</string>
+    <string name="btn_close">Close</string>
+    <string name="info_error_register">Oops! your email\nalready registered</string>
+    <string name="tv_change_pass"><u>Change</u></string>
+    <string name="error_login">Oops!, Your Account\nnot found</string>
+
+
 </resources>
