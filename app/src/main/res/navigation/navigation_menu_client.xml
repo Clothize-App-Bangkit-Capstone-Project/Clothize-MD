@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/menu_home"
-        android:name="com.capstoneproject.clothizeapp.ui.client.home.HomeFragment"
+        android:name="com.capstoneproject.clothizeapp.client.ui.client.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_order"/>
     <fragment
         android:id="@+id/menu_order"
-        android:name="com.capstoneproject.clothizeapp.ui.client.order.OrderFragment"
+        android:name="com.capstoneproject.clothizeapp.client.ui.client.order.OrderFragment"
         android:label="OrderFragment"
         tools:layout="@layout/fragment_order"/>
     <fragment
         android:id="@+id/menu_history"
-        android:name="com.capstoneproject.clothizeapp.ui.client.history.HistoryFragment"
+        android:name="com.capstoneproject.clothizeapp.client.ui.client.history.HistoryFragment"
         android:label="HistoryFragment"
         tools:layout="@layout/fragment_history"/>
     <fragment
         android:id="@+id/menu_profile"
-        android:name="com.capstoneproject.clothizeapp.ui.client.profile.ProfileFragment"
+        android:name="com.capstoneproject.clothizeapp.client.ui.client.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_history" />
 </navigation>

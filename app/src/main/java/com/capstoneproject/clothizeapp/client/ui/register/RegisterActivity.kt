@@ -93,7 +93,6 @@ class RegisterActivity : AppCompatActivity() {
         val password = binding.passwordRegis.text.toString()
 
 
-
         loadingDialog(true)
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -109,6 +108,7 @@ class RegisterActivity : AppCompatActivity() {
                         ).show()
                     }
                 } else {
+                    loadingDialog(false)
                     val exception = task.exception
                     if (exception is FirebaseAuthUserCollisionException) {
                         errorDialog()
