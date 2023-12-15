@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.client.profile.ProfileFragment">
+    tools:context=".client.ui.client.history.HistoryFragment">
 
     <TextView
         android:id="@+id/title_history"
@@ -19,6 +19,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/title_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="History is empty!"
+        android:textColor="@color/red_rejected"
+        android:fontFamily="@font/poppins_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/title_history"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
@@ -26,6 +39,7 @@
         android:paddingTop="16dp"
         android:paddingHorizontal="16dp"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_history"

@@ -2,9 +2,9 @@
 <resources>
     <string-array name="type">
         <item>Clothing type</item>
-        <item>Kaos</item>
-        <item>Kemeja</item>
+        <item>T-shirts</item>
+        <item>Shirts</item>
         <item>Hoodie</item>
-        <item>Jaket</item>
+        <item>Jacket</item>
     </string-array>
 </resources>

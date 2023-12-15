@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.capstoneproject.clothizeapp.R
+import com.capstoneproject.clothizeapp.client.ui.client.measurements.MeasurementActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityMainClientBinding
-import com.capstoneproject.clothizeapp.ui.client.measurements.MeasurementActivity
 
 class MainClientActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainClientBinding

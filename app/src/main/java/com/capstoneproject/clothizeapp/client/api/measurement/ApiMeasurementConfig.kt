@@ -1,7 +1,7 @@
 package com.alfares.storyappsubmission1.api.story
 
 import com.capstoneproject.clothizeapp.BuildConfig
-import com.capstoneproject.clothizeapp.api.measurement.ApiMeasurementService
+import com.capstoneproject.clothizeapp.client.api.measurement.ApiMeasurementService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

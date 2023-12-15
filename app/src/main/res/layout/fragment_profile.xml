@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.client.profile.ProfileFragment">
+    tools:context=".client.ui.client.profile.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -52,50 +52,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_change_photo"
             android:layout_marginTop="8dp"/>
 
-        <TextView
-            android:id="@+id/tv_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="13dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="Email"
-            android:textColor="@color/dark_brown"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_username" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/emailEditTextLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:endIconMode="clear_text"
-            app:endIconTint="@color/brown_gold"
-            android:textColorHint="@color/brown_gold"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_email">
-
-            <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomEmailEditText
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:ems="10"
-                android:textColor="@color/brown_gold"
-                android:maxLines="1"
-                android:textSize="14sp"
-                android:fontFamily="@font/poppins_regular"
-                android:textColorHint="@color/brown_gold"
-                android:inputType="textEmailAddress"
-                android:paddingHorizontal="16dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:background="@drawable/border_edit_text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
 
         <TextView
             android:id="@+id/tv_name"
@@ -108,7 +64,7 @@
             android:textColor="@color/dark_brown"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_username" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameEditTextLayout"
@@ -130,7 +86,7 @@
                 android:textColor="@color/brown_gold"
                 android:maxLines="1"
                 android:textSize="14sp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="sans-serif"
                 android:textColorHint="@color/brown_gold"
                 android:inputType="textPersonName"
                 android:paddingHorizontal="16dp"
@@ -173,7 +129,7 @@
                 android:textColor="@color/brown_gold"
                 android:maxLines="1"
                 android:textSize="14sp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="sans-serif"
                 android:textColorHint="@color/brown_gold"
                 android:inputType="number"
                 android:paddingHorizontal="16dp"
@@ -215,7 +171,7 @@
                 android:gravity="top|start"
                 android:textColor="@color/brown_gold"
                 android:textSize="14sp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="sans-serif"
                 android:textColorHint="@color/brown_gold"
                 android:inputType="textMultiLine"
                 android:minLines="3"
@@ -233,7 +189,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="@string/tv_pass"
+            android:text="Your Account"
             android:textColor="@color/dark_brown"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -243,7 +199,7 @@
             android:id="@+id/tv_change_pass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_change_pass"
+            android:text="@string/tv_more_account"
             android:textSize="16sp"
             android:clickable="true"
             android:focusable="true"

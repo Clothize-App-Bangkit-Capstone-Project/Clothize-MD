@@ -61,8 +61,11 @@
     <string name="dialog_register">Registration Success!\nPlease verify your email</string>
     <string name="btn_close">Close</string>
     <string name="info_error_register">Oops! your email\nalready registered</string>
-    <string name="tv_change_pass"><u>Change</u></string>
+    <string name="tv_more_account"><u>More</u></string>
     <string name="error_login">Oops!, Your Account\nnot found</string>
+    <string name="tv_updateNote"><b>Note : </b> Please verify your email when its changed!</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
 
 
 </resources>

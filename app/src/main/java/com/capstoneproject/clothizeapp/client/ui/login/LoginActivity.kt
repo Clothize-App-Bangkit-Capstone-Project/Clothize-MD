@@ -73,7 +73,6 @@ class LoginActivity : AppCompatActivity() {
                 dialog.dismiss()
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    Log.d("TAG", "authenticate: ${user?.displayName.toString()}")
                     if (user?.isEmailVerified == true) {
                         val userSession = ClientSession(
                             email = user.email.toString(),
@@ -94,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
                         ).show()
                     }
                 } else {
-                        dialog.dismiss()
+                    dialog.dismiss()
                     val exception = task.exception
                     if (exception is FirebaseAuthException) {
                         errorDialog()

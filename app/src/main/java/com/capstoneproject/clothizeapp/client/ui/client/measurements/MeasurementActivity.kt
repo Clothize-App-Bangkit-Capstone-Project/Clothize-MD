@@ -10,18 +10,25 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
 import com.capstoneproject.clothizeapp.client.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityMeasurementBinding
 import com.capstoneproject.clothizeapp.utils.getImageUri
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MeasurementActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMeasurementBinding
-    private var currentImageUri: Uri? = null
     private lateinit var viewModel: MeasurementViewModel
+    private lateinit var loadingDialog : AlertDialog
+    private var currentImageUri: Uri? = null
     private var typeClothes = ""
+    private var gender = ""
 
 
     private val launcherIntentCamera = registerForActivityResult(
@@ -53,6 +60,7 @@ class MeasurementActivity : AppCompatActivity() {
     }
 
     private fun init(){
+        loadingDialog = loadingDialog()
         viewModel = obtainViewModel(this)
 
         // Fill entries to spinner
@@ -107,6 +115,17 @@ class MeasurementActivity : AppCompatActivity() {
         binding.btnGallery.setOnClickListener {
             launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+        binding.btnCalculate.setOnClickListener {
+            calculateUserPhoto()
+        }
+
+        binding.rgGender.setOnCheckedChangeListener { _, checkedId ->
+            when(checkedId){
+                R.id.rd_male -> gender = binding.rdMale.text.toString()
+                R.id.rd_female -> gender = binding.rdFemale.text.toString()
+            }
+        }
     }
 
     private fun showImage() {
@@ -117,7 +136,28 @@ class MeasurementActivity : AppCompatActivity() {
     }
 
     private fun calculateUserPhoto(){
+        if (checkFillOrNot()){
+            loadingDialog.show()
 
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(2000)
+                loadingDialog.dismiss()
+                val size = "XXL"
+                val parsingSize = when(size){
+                    "XXL" -> "X2L"
+                    "XXXL" -> "X3L"
+                    else -> {size}
+                }
+
+                val intentToResult = Intent(this@MeasurementActivity, CalculateResultActivity::class.java)
+                intentToResult.putExtra(CalculateResultActivity.SIZE, parsingSize)
+                intentToResult.putExtra(CalculateResultActivity.GENDER, gender)
+                intentToResult.putExtra(CalculateResultActivity.TYPE, typeClothes)
+                startActivity(intentToResult)
+            }
+        }else{
+            Toast.makeText(this, "Please fill all input before calculate!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun obtainViewModel(appCompatActivity: AppCompatActivity): MeasurementViewModel {
@@ -125,5 +165,47 @@ class MeasurementActivity : AppCompatActivity() {
         return ViewModelProvider(
             appCompatActivity, factory
         )[MeasurementViewModel::class.java]
+    }
+
+
+    private fun checkFillOrNot(): Boolean{
+
+        if (binding.ageEdt.text.toString().isEmpty() || binding.ageEdt.text.toString() == "0"){
+            binding.ageTIL.error = getString(R.string.not_fill)
+            binding.ageEdt.error = null
+        }else{
+            binding.ageTIL.error = null
+        }
+
+        if (binding.heightEdt.text.toString().isEmpty() || binding.heightEdt.text.toString() == "0"){
+            binding.heightTIL.error = getString(R.string.not_fill)
+            binding.heightEdt.error = null
+        }else{
+            binding.heightTIL.error = null
+        }
+
+        if (binding.weightEdt.text.toString().isEmpty() || binding.weightEdt.text.toString() == "0"){
+            binding.weightTIL.error = getString(R.string.not_fill)
+            binding.weightEdt.error = null
+        }else{
+            binding.weightTIL.error = null
+        }
+
+        return (typeClothes != "Clothing type" &&
+                gender != "" &&
+                (binding.ageEdt.text.toString().isNotEmpty() && binding.ageEdt.text.toString() != "0") &&
+                (binding.heightEdt.text.toString().isNotEmpty() && binding.heightEdt.text.toString() != "0") &&
+                (binding.weightEdt.text.toString().isNotEmpty() && binding.weightEdt.text.toString() != "0") &&
+                currentImageUri != null)
+    }
+
+    private fun loadingDialog(): AlertDialog {
+        val view = layoutInflater.inflate(R.layout.dialog_loading, null)
+        val builder = AlertDialog.Builder(this)
+        builder.setView(view)
+
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        return dialog
     }
 }
