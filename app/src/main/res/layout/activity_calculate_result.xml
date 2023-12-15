@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/jenis_pakaian"
                     android:textSize="18sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:textColor="@color/brown_gold"
                     />
                 <TextView
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/ukuran_pakaian"
                     android:textSize="18sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:textColor="@color/brown_gold"
                     />
                 <TextView
@@ -117,7 +117,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:text="@string/gender"
                     android:textColor="@color/brown_gold"
                     android:textSize="18sp" />
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/chest_girth"
                     android:textSize="18sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:textColor="@color/brown_gold"
                     />
                 <TextView
@@ -187,7 +187,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/body_girth"
                     android:textSize="18sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:textColor="@color/brown_gold"
                     />
                 <TextView
@@ -214,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/body_length"
                     android:textSize="18sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:textColor="@color/brown_gold"
                     />
                 <TextView
@@ -241,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/shoulder_width"
                     android:textSize="18sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_bold"
                     android:textColor="@color/brown_gold"
                     />
                 <TextView

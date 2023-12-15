@@ -4,7 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
@@ -68,7 +69,7 @@ class CalculateResultActivity : AppCompatActivity() {
         )
 
         viewModel.insertMeasurement(measurement)
-        Toast.makeText(this, "Success to add history", Toast.LENGTH_SHORT).show()
+        successDialog()
 
 
     }
@@ -119,6 +120,23 @@ class CalculateResultActivity : AppCompatActivity() {
         }
 
         return null
+    }
+
+    private fun successDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_success_add_history, null)
+        val builder = AlertDialog.Builder(this)
+        builder.setView(view)
+
+        val dialog = builder.create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        view.findViewById<Button>(R.id.btn_dismiss).setOnClickListener {
+            dialog.dismiss()
+            val intentToMain = Intent(this, MainClientActivity::class.java)
+            finish()
+            startActivity(intentToMain)
+        }
     }
 
     companion object {

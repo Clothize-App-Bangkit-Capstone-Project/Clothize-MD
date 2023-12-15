@@ -196,7 +196,6 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun changeAccount(
         newMail: String,
         oldPassword: String,
@@ -210,8 +209,8 @@ class ProfileFragment : Fragment() {
             Log.d("TAG", "changeAccountDialog: $newMail, $oldPassword, $newPassword")
             val credential = EmailAuthProvider.getCredential(session.email, oldPassword)
             loadingDialog.show()
-            user?.reauthenticate(credential)?.addOnCompleteListener {task ->
-                if (task.isSuccessful){
+            user?.reauthenticate(credential)?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     if (newPassword.isEmpty()) {
                         user.verifyBeforeUpdateEmail(newMail)
                             .addOnCompleteListener { status ->
@@ -239,7 +238,7 @@ class ProfileFragment : Fragment() {
                             errorDialog()
                         }
                     }
-                }else{
+                } else {
                     loadingDialog.dismiss()
                     errorDialog()
                 }
@@ -261,23 +260,28 @@ class ProfileFragment : Fragment() {
         val fullName = binding.nameEditText.text.toString()
         val phone = binding.phoneEditText.text.toString()
         val address = binding.addressEditText.text.toString()
+        var isSuccessAdd = false
 
         clientPrefViewModel.getSessionUser().observe(requireActivity()) { session ->
-            if (session != null) {
-                val clientSession = ClientSession(
+            isSuccessAdd = if (session != null) {
+                clientSession = ClientSession(
                     username = session.username,
                     email = session.email,
                     fullName = fullName,
                     phone = phone,
                     address = address,
                 )
-
-                clientPrefViewModel.saveSessionUser(clientSession)
-                successDialog()
+                true
             } else {
-                errorDialog()
+                false
+
             }
         }
+
+        if (isSuccessAdd) {
+            clientPrefViewModel.saveSessionUser(clientSession)
+            successDialog()
+        } else errorDialog()
 
 
     }

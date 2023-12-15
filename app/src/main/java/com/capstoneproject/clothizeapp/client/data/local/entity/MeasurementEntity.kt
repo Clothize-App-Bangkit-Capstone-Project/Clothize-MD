@@ -16,8 +16,8 @@ data class MeasurementEntity(
     @ColumnInfo("size")
     val size: String = "",
 
-//    @ColumnInfo("picture")
-//    val picture: String = "",
+    @ColumnInfo("picture")
+    val picture: String = "",
 
     @ColumnInfo("gender")
     val gender: String = "",

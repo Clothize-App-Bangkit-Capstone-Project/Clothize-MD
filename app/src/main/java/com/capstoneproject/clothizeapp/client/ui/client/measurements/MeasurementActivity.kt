@@ -142,8 +142,15 @@ class MeasurementActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.Main).launch {
                 delay(2000)
                 loadingDialog.dismiss()
+                val size = "XXL"
+                val parsingSize = when(size){
+                    "XXL" -> "X2L"
+                    "XXXL" -> "X3L"
+                    else -> {size}
+                }
+
                 val intentToResult = Intent(this@MeasurementActivity, CalculateResultActivity::class.java)
-                intentToResult.putExtra(CalculateResultActivity.SIZE, "XL")
+                intentToResult.putExtra(CalculateResultActivity.SIZE, parsingSize)
                 intentToResult.putExtra(CalculateResultActivity.GENDER, gender)
                 intentToResult.putExtra(CalculateResultActivity.TYPE, typeClothes)
                 startActivity(intentToResult)

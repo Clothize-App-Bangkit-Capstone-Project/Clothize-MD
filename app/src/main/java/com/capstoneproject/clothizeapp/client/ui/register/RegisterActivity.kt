@@ -34,10 +34,8 @@ class RegisterActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         binding.btnRegisBack.setOnClickListener {
-            if (checkFillOrNot()) {
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-            }
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
 
         binding.btnRegis.setOnClickListener {
@@ -55,7 +53,6 @@ class RegisterActivity : AppCompatActivity() {
             binding.nameEditTextLayout.isErrorEnabled = false
             binding.nameEditTextLayout.clearFocus()
             binding.emailEditTextLayout.requestFocus()
-
         }
 
         if (binding.emailRegis.text.toString().isEmpty()) {
@@ -82,10 +79,21 @@ class RegisterActivity : AppCompatActivity() {
             binding.passwordEditTextLayout.clearFocus()
         }
 
+        if (binding.passwordRegisConfirm.text.toString().isEmpty()) {
+            binding.passwordConfirmEditTextLayout.error = getString(R.string.not_fill)
+        } else if (binding.passwordRegisConfirm.text.toString() != binding.passwordRegis.text.toString()) {
+            binding.passwordConfirmEditTextLayout.error = "Confirm password does'nt match"
+        } else {
+            binding.passwordConfirmEditTextLayout.error = null
+        }
 
-        return !(binding.nameEditTextLayout.error != null ||
-                (binding.emailEditTextLayout.error != null && binding.emailRegis.error == null) ||
-                (binding.passwordEditTextLayout.error != null || binding.passwordRegis.error != null))
+
+        return (binding.nameRegis.text.toString().isNotEmpty() &&
+                binding.emailRegis.text.toString().isNotEmpty() &&
+                binding.passwordRegis.text.toString().isNotEmpty() &&
+                binding.passwordRegisConfirm.text.toString().isNotEmpty() &&
+                binding.passwordRegisConfirm.text.toString() != binding.passwordRegis.text.toString()
+                )
     }
 
     private fun setNewUser() {
