@@ -48,6 +48,11 @@ class DetailOrderActivity : AppCompatActivity() {
             }
             "Pending" -> {
                 binding.boxNote.visibility = View.GONE
+                binding.btnApprove.visibility = View.GONE
+                binding.btnRejected.visibility = View.GONE
+                binding.boxFeedback.visibility = View.GONE
+                binding.boxPrice.visibility = View.GONE
+                binding.boxTotalPrice.visibility = View.GONE
             }
             "Rejected" -> {
                 binding.btnApprove.visibility = View.GONE
@@ -55,6 +60,9 @@ class DetailOrderActivity : AppCompatActivity() {
                 binding.boxNote.visibility = View.GONE
                 binding.boxPrice.visibility = View.GONE
                 binding.boxTotalPrice.visibility = View.GONE
+            }
+            "Offer" -> {
+                binding.boxNote.visibility = View.GONE
             }
             else -> {
                 binding.btnApprove.visibility = View.GONE

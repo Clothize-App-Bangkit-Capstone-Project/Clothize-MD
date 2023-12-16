@@ -40,7 +40,7 @@ class OrderRepository(
             type = "Shirts",
             gender = "Female",
             estimation = 3,
-            status = "Finished",
+            status = "Offer",
         ),
     )
 
