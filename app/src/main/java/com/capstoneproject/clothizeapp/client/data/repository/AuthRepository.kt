@@ -5,9 +5,6 @@ import com.capstoneproject.clothizeapp.client.api.auth.ApiAuthService
 class AuthRepository(
     private val apiAuthService: ApiAuthService,
 ) {
-
-
-
     companion object {
         @Volatile
         private var instance: AuthRepository? = null
