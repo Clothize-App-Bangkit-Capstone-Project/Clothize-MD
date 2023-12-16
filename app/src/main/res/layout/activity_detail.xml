@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".client.ui.client.detail.DetailActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detailActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_detailBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/brown_gold"
+            android:contentDescription="@string/btn_register"
+            android:src="@drawable/ic_back_arrow"
+            app:elevation="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Detail Tailor"
+            android:textColor="@color/brown_gold"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_detailBack"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_detailBack"
+            app:layout_constraintTop_toTopOf="@id/btn_detailBack" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/img_detail"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_detailBack">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/dummy_detail" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/detail_titleTailor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="@string/detail_nametailor"
+            android:textColor="@color/brown_gold"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_detail" />
+
+        <TextView
+            android:id="@+id/detail_descTailor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins_regular"
+            android:paddingHorizontal="16dp"
+            android:text="@string/dummy_detail_tailor"
+            android:textColor="@color/brown_gold"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_titleTailor" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/img_maps"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/secondary_color"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_descTailor">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/dummy_maps" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/poppins_regular"
+                android:text="@string/detail_locationtailor"
+                android:textColor="@color/brown_gold"
+                android:textSize="12sp" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/detail_titleService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Service Us"
+            android:textColor="@color/brown_gold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_maps" />
+
+        <TableLayout
+            android:id="@+id/detail_tablePrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/item_detail_price"
+            android:padding="8dp"
+            android:stretchColumns="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_titleService">
+
+            <TableRow>
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Jaket"
+                    android:textColor="@color/brown_gold" />
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="IDR 180 - 300K"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/brown_gold" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Kaos"
+                    android:textColor="@color/brown_gold" />
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="IDR 180 - 300K"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/brown_gold" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Kemeja"
+                    android:textColor="@color/brown_gold" />
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="IDR 180 - 300K"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/brown_gold" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Hoodie"
+                    android:textColor="@color/brown_gold" />
+
+                <TextView
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="IDR 180 - 300K"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/brown_gold" />
+            </TableRow>
+
+        </TableLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_orderTailor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/create_order"
+            android:fontFamily="@font/poppins_bold"
+            android:background="@drawable/bg_btnback"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_tablePrice" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

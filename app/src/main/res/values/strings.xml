@@ -66,6 +66,14 @@
     <string name="tv_updateNote"><b>Note : </b> Please verify your email when its changed!</string>
     <string name="height">Height</string>
     <string name="weight">Weight</string>
+    <string name="search_penjahit">Cari Penjahit...</string>
+    <string name="search_find">find</string>
+    <string name="rv_textTailor">Tampan Tailor</string>
+    <string name="rv_locationTailor">Depok, Jawa Barat</string>
+    <string name="detail_nametailor">Tampan Tailor\'s</string>
+    <string name="dummy_detail_tailor">Kami memiliki beberapa penjahit yang handal dan telah tersertifikasi oleh lembaga pelatihan terkait. Kami telah menjadi vendor pembuatan pakaian sekolah dan seragam dari beberapa instansi pemerintahan.</string>
+    <string name="detail_locationtailor">Jl. Mampang Prapatan Raya, Cibereum</string>
+    <string name="create_order">Create Order</string>
 
 
 </resources>
