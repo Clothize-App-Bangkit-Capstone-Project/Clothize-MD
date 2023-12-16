@@ -22,7 +22,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".client.ui.login.LoginActivity"
+            android:name=".client.ui.register.RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -34,7 +34,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".client.ui.register.RegisterActivity"
+            android:name=".client.ui.login.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity

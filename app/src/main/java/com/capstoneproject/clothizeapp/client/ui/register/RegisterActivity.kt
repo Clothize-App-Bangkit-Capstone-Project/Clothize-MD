@@ -1,5 +1,6 @@
 package com.capstoneproject.clothizeapp.client.ui.register
 
+import android.animation.AnimatorSet
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.capstoneproject.clothizeapp.R
 import com.capstoneproject.clothizeapp.client.ui.login.LoginActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityRegisterBinding
+import com.capstoneproject.clothizeapp.utils.AnimationPackage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
@@ -24,7 +26,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        playAnimation()
         init()
 
 
@@ -92,13 +94,12 @@ class RegisterActivity : AppCompatActivity() {
                 binding.emailRegis.text.toString().isNotEmpty() &&
                 binding.passwordRegis.text.toString().isNotEmpty() &&
                 binding.passwordRegisConfirm.text.toString().isNotEmpty() &&
-                binding.passwordRegisConfirm.text.toString() != binding.passwordRegis.text.toString()
-                )
+                binding.passwordRegisConfirm.text.toString() == binding.passwordRegis.text.toString())
     }
 
     private fun setNewUser() {
-        val email = binding.emailRegis.text.toString()
-        val password = binding.passwordRegis.text.toString()
+        val email = binding.emailRegis.text.toString().trim()
+        val password = binding.passwordRegis.text.toString().trim()
 
 
         loadingDialog(true)
@@ -171,5 +172,89 @@ class RegisterActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         if (state) dialog.show() else dialog.dismiss()
+    }
+
+    private fun playAnimation() {
+        // Button Back
+        val btnBackFI = AnimationPackage.fadeIn(binding.btnRegisBack, 700)
+        val btnBackX = AnimationPackage.translateX(binding.btnRegisBack, 700, -50f, 0f)
+
+        // Banner
+        val bannerFadeIn = AnimationPackage.fadeIn(binding.imgLogo, 700)
+        val bannerMoveY = AnimationPackage.translateY(binding.imgLogo, 700, -50f, 0f)
+
+        // Username
+        val titleUsername = AnimationPackage.fadeIn(binding.tvRegisUser, 500)
+        val titleUsernameX = AnimationPackage.translateX(binding.tvRegisUser, 500, -30f, 0f)
+
+        val usernameTIL = AnimationPackage.fadeIn(binding.nameEditTextLayout, 500)
+        val usernameTILX = AnimationPackage.translateX(binding.nameEditTextLayout, 500, -30f, 0f)
+
+        // Email
+        val titleEmail = AnimationPackage.fadeIn(binding.tvRegisEmail, 500)
+        val titleEmailX = AnimationPackage.translateX(binding.tvRegisEmail, 500, -30f, 0f)
+
+        val emailTIL = AnimationPackage.fadeIn(binding.emailEditTextLayout, 500)
+        val emailTILX = AnimationPackage.translateX(binding.emailEditTextLayout, 500, -30f, 0f)
+
+        // Password
+        val titlePass = AnimationPackage.fadeIn(binding.tvRegisPass, 500)
+        val titlePassX = AnimationPackage.translateX(binding.tvRegisPass, 500, -30f, 0f)
+
+        val passTIL = AnimationPackage.fadeIn(binding.passwordEditTextLayout, 500)
+        val passTILX = AnimationPackage.translateX(binding.passwordEditTextLayout, 500, -30f, 0f)
+
+        // Password Confirm
+        val titlePassConfirm = AnimationPackage.fadeIn(binding.tvRegisConPass, 500)
+        val titlePassConfirmX = AnimationPackage.translateX(binding.tvRegisConPass, 500, -30f, 0f)
+
+        val passConfirmTIL = AnimationPackage.fadeIn(binding.passwordConfirmEditTextLayout, 500)
+        val passConfirmTILX = AnimationPackage.translateX(binding.passwordConfirmEditTextLayout, 500, -30f, 0f)
+
+        // Register Button
+        val btnRegister = AnimationPackage.fadeIn(binding.btnRegis, 500)
+
+        // Note
+        val titleNote = AnimationPackage.fadeIn(binding.note, 500)
+
+        val bannerAnim = AnimatorSet().apply {
+            play(btnBackFI).with(btnBackX)
+            play(bannerFadeIn).with(bannerMoveY)
+        }
+
+        val usernameAnim = AnimatorSet().apply {
+            play(titleUsername).with(titleUsernameX)
+            play(usernameTIL).with(usernameTILX)
+        }
+
+        val emailAnim = AnimatorSet().apply {
+            play(titleEmail).with(titleEmailX)
+            play(emailTIL).with(emailTILX)
+        }
+
+        val passwordAnim = AnimatorSet().apply {
+            play(titlePass).with(titlePassX)
+            play(passTIL).with(passTILX)
+        }
+
+        val passwordConfirmAnim = AnimatorSet().apply {
+            play(titlePassConfirm).with(titlePassConfirmX)
+            play(passConfirmTIL).with(passConfirmTILX)
+        }
+
+        AnimatorSet().apply {
+            playSequentially(
+                bannerAnim,
+                usernameAnim,
+                emailAnim,
+                passwordAnim,
+                passwordConfirmAnim,
+                titleNote,
+                btnRegister
+            )
+            start()
+        }
+
+
     }
 }

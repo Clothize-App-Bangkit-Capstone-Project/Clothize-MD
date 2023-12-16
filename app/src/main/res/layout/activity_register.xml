@@ -20,6 +20,8 @@
             android:src="@drawable/ic_back_arrow"
             app:tint="@null"
             app:elevation="30dp"
+            android:alpha="0"
+            tools:alpha="100"
             android:backgroundTint="@color/brown_gold"
             android:layout_gravity="top|start"
             android:contentDescription="@string/btn_register" />
@@ -35,7 +37,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginTop="30dp"
-                android:alpha="100"
+                android:alpha="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +57,9 @@
                 android:textColor="@color/brown_gold"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_logo" />
+                app:layout_constraintTop_toBottomOf="@+id/img_logo"
+                android:alpha="0"
+                tools:alpha="100"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameEditTextLayout"
@@ -69,7 +73,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:startIconDrawable="@drawable/baseline_person_24"
                 app:startIconTint="@color/brown_gold"
-                app:layout_constraintTop_toBottomOf="@+id/tv_regisUser">
+                app:layout_constraintTop_toBottomOf="@+id/tv_regisUser"
+                android:alpha="0"
+                tools:alpha="100">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nameRegis"
@@ -97,7 +103,9 @@
                 android:textColor="@color/brown_gold"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameEditTextLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/nameEditTextLayout"
+                android:alpha="0"
+                tools:alpha="100"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailEditTextLayout"
@@ -112,7 +120,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:startIconDrawable="@drawable/baseline_email_24"
                 app:startIconTint="@color/brown_gold"
-                app:layout_constraintTop_toBottomOf="@+id/tv_regisEmail">
+                app:layout_constraintTop_toBottomOf="@+id/tv_regisEmail"
+                android:alpha="0"
+                tools:alpha="100">
 
                 <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomEmailEditText
                     android:id="@+id/emailRegis"
@@ -140,21 +150,27 @@
                 android:textColor="@color/brown_gold"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout"
+                android:alpha="0"
+                tools:alpha="100"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordEditTextLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:endIconMode="password_toggle"
-                app:endIconTint="@color/brown_gold"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/brown_gold"
+                app:passwordToggleDrawable="@drawable/password_toggle"
+                app:endIconDrawable="@drawable/password_toggle"
                 android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:startIconDrawable="@drawable/baseline_password_24"
                 app:startIconTint="@color/brown_gold"
-                app:layout_constraintTop_toBottomOf="@+id/tv_regisPass">
+                app:layout_constraintTop_toBottomOf="@+id/tv_regisPass"
+                android:alpha="0"
+                tools:alpha="100">
 
                 <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomPasswordEditText
                     android:id="@+id/passwordRegis"
@@ -182,21 +198,27 @@
                 android:textColor="@color/brown_gold"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLayout"
+                android:alpha="0"
+                tools:alpha="100"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordConfirmEditTextLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:endIconMode="password_toggle"
-                app:endIconTint="@color/brown_gold"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/brown_gold"
+                app:passwordToggleDrawable="@drawable/password_toggle"
+                app:endIconDrawable="@drawable/password_toggle"
                 android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:startIconDrawable="@drawable/baseline_password_24"
                 app:startIconTint="@color/brown_gold"
-                app:layout_constraintTop_toBottomOf="@+id/tv_regisConPass">
+                app:layout_constraintTop_toBottomOf="@+id/tv_regisConPass"
+                android:alpha="0"
+                tools:alpha="100">
 
                 <com.capstoneproject.clothizeapp.client.ui.custom_view.CustomPasswordEditText
                     android:id="@+id/passwordRegisConfirm"
@@ -223,7 +245,10 @@
                 android:textColor="@color/brown_gold"
                 app:layout_constraintTop_toBottomOf="@id/passwordConfirmEditTextLayout"
                 app:layout_constraintStart_toStartOf="@id/passwordConfirmEditTextLayout"
-                app:layout_constraintEnd_toEndOf="@id/passwordConfirmEditTextLayout" />
+                app:layout_constraintEnd_toEndOf="@id/passwordConfirmEditTextLayout"
+                android:alpha="0"
+                tools:alpha="100"
+                />
 
             <Button
                 android:id="@+id/btn_regis"
@@ -235,7 +260,9 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/register"
-                app:layout_constraintTop_toBottomOf="@+id/note" />
+                app:layout_constraintTop_toBottomOf="@+id/note"
+                android:alpha="0"
+                tools:alpha="100"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_regisGmail"
