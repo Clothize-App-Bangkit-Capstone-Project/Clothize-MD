@@ -3,22 +3,15 @@ package com.capstoneproject.clothizeapp.client.ui.client.measurements
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
 import com.capstoneproject.clothizeapp.client.api.response.DetailSize
-import com.capstoneproject.clothizeapp.client.api.response.Size
 import com.capstoneproject.clothizeapp.client.data.local.entity.MeasurementEntity
 import com.capstoneproject.clothizeapp.client.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityCalculateResultBinding
-import com.google.gson.Gson
-import org.json.JSONException
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
 
 class CalculateResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCalculateResultBinding
@@ -41,7 +34,7 @@ class CalculateResultActivity : AppCompatActivity() {
         val type = intent.getStringExtra(TYPE)
 
         if (size != null && gender != null && type != null) {
-            val content = loadSizeClothes(type.lowercase(), size, gender.lowercase())
+            val content = viewModel.getDetailSizeForUser(type.lowercase(), size, gender.lowercase())
             if (content != null) {
                 loadContent(content, type, gender)
             }
@@ -91,36 +84,6 @@ class CalculateResultActivity : AppCompatActivity() {
         )[MeasurementViewModel::class.java]
     }
 
-    private fun loadSizeClothes(type: String, size: String, gender: String): DetailSize? {
-        val jsonFile = if (type == "t-shirts" || type == "shirts") {
-            resources.openRawResource(R.raw.tshirts)
-        } else {
-            resources.openRawResource(R.raw.jacket)
-        }
-
-        val builder = StringBuilder()
-        val reader = BufferedReader(InputStreamReader(jsonFile))
-        var line: String?
-        try {
-            while (reader.readLine().also { line = it } != null) {
-                builder.append(line)
-            }
-            val json = Gson().fromJson(builder.toString(), Size::class.java)
-            val sizes = if (gender == "male") json.maleSize else json.femaleSize
-            Log.d("test-content", "loadSizeClothes: $sizes $json")
-            for (i in sizes.indices) {
-                if (sizes[i].size == size) {
-                    return sizes[i]
-                }
-            }
-        } catch (exception: IOException) {
-            exception.printStackTrace()
-        } catch (exception: JSONException) {
-            exception.printStackTrace()
-        }
-
-        return null
-    }
 
     private fun successDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_success_add_history, null)
@@ -144,4 +107,35 @@ class CalculateResultActivity : AppCompatActivity() {
         const val GENDER = "gender"
         const val TYPE = "type"
     }
+
+
+    //    private fun loadSizeClothes(type: String, size: String, gender: String): DetailSize? {
+//        val jsonFile = if (type == "t-shirts" || type == "shirts") {
+//            resources.openRawResource(R.raw.tshirts)
+//        } else {
+//            resources.openRawResource(R.raw.jacket)
+//        }
+//
+//        val builder = StringBuilder()
+//        val reader = BufferedReader(InputStreamReader(jsonFile))
+//        var line: String?
+//        try {
+//            while (reader.readLine().also { line = it } != null) {
+//                builder.append(line)
+//            }
+//            val json = Gson().fromJson(builder.toString(), Size::class.java)
+//            val sizes = if (gender == "male") json.maleSize else json.femaleSize
+//            for (i in sizes.indices) {
+//                if (sizes[i].size == size) {
+//                    return sizes[i]
+//                }
+//            }
+//        } catch (exception: IOException) {
+//            exception.printStackTrace()
+//        } catch (exception: JSONException) {
+//            exception.printStackTrace()
+//        }
+//
+//        return null
+//    }
 }

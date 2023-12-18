@@ -11,17 +11,41 @@ data class OrderEntity(
     val id : Int = 0,
 
     @ColumnInfo("tailor_name")
-    val tailor: String = "",
+    val tailorName: String = "",
 
-    @ColumnInfo("clothes_type")
-    val type: String = "",
+    @ColumnInfo("client_name")
+    val clientName: String = "",
 
     @ColumnInfo("gender")
     val gender: String = "",
 
+    @ColumnInfo("service")
+    val service: String = "",
+
+    @ColumnInfo("size")
+    val size: String = "",
+
+    @ColumnInfo("color")
+    val color: String = "",
+
+    @ColumnInfo("clothing_model")
+    val model: String = "",
+
+    @ColumnInfo("qty")
+    val qty: Int,
+
+    @ColumnInfo("comment")
+    val comment: String = "",
+
+    @ColumnInfo("price_pcs")
+    val price: Int = 0,
+
     @ColumnInfo("estimation")
     val estimation: Int,
 
+    @ColumnInfo("order_date")
+    val orderDate: String,
+
     @ColumnInfo("status")
-    val status: String = "",
+    val status: String = "Pending",
 )

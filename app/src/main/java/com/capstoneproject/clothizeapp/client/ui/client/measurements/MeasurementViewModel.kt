@@ -14,4 +14,6 @@ class MeasurementViewModel(private val measurementRepository: MeasurementReposit
     }
 
     fun loadHistory() = measurementRepository.getAllMeasurementClient()
+    fun getDetailSizeForUser(type: String, size: String, gender: String) = measurementRepository.loadSizeClothes(type, size, gender)
+
 }

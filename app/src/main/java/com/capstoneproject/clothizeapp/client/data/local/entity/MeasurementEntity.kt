@@ -16,9 +16,6 @@ data class MeasurementEntity(
     @ColumnInfo("size")
     val size: String = "",
 
-    @ColumnInfo("picture")
-    val picture: String = "",
-
     @ColumnInfo("gender")
     val gender: String = "",
 
@@ -33,4 +30,7 @@ data class MeasurementEntity(
 
     @ColumnInfo("body_circumference")
     val bodyGirth: Int,
+
+    @ColumnInfo("created_at")
+    val orderDate: String = "",
 )

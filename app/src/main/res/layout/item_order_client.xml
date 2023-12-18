@@ -21,24 +21,28 @@
 
         <TextView
             android:id="@+id/tv_tailor"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:fontFamily="@font/poppins_bold"
             android:text="Tampan Tailor's"
             android:textColor="@color/dark_brown"
             android:textSize="18sp"
+            android:ellipsize="end"
+            android:maxLines="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_order_type"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
             android:text="T-shirt (Short) - Male"
             android:textColor="@color/brown_gold"
             android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"
             app:layout_constraintStart_toStartOf="@+id/tv_tailor"
             app:layout_constraintTop_toBottomOf="@id/tv_tailor" />
 
@@ -61,10 +65,12 @@
 
         <TextView
             android:id="@+id/tv_estimation"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:text="Estimate: 3 days"
             android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:fontFamily="@font/poppins_medium"
             android:textColor="@color/brown_gold"
             app:layout_constraintStart_toStartOf="@id/tv_order_type"

@@ -9,7 +9,7 @@ object MeasurementInjection {
     fun provideRepository(context: Context): MeasurementRepository {
         val apiService = ApiMeasurementConfig.getApiService()
         val db = AppDatabase.getInstance(context)
-        return MeasurementRepository.getInstance(apiService, db)
+        return MeasurementRepository.getInstance(apiService, db, context)
 
     }
 }

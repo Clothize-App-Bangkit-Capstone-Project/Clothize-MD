@@ -7,7 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class ClientPrefViewModel(private val pref: UserPreferences) : ViewModel() {
+class ClientPrefViewModel(private val pref: ClientPreferences) : ViewModel() {
     fun saveSessionUser(userData: ClientSession) {
         viewModelScope.launch {
             pref.saveSessionUser(userData)

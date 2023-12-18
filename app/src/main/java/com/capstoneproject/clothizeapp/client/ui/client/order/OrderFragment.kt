@@ -10,11 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstoneproject.clothizeapp.client.data.adapter.OrderAdapter
 import com.capstoneproject.clothizeapp.client.data.local.entity.OrderEntity
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferences
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferencesFactory
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.dataStore
 import com.capstoneproject.clothizeapp.databinding.FragmentOrderBinding
 
 class OrderFragment : Fragment() {
     private lateinit var binding: FragmentOrderBinding
     private lateinit var viewModel: OrderViewModel
+    private lateinit var clientPrefViewModel: ClientPrefViewModel
+    private var clientName = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -28,14 +34,25 @@ class OrderFragment : Fragment() {
 
     private fun init(){
         viewModel = obtainViewModel(requireActivity())
-        val adapter = OrderAdapter(requireContext())
+        val pref = ClientPreferences.getInstance(requireActivity().dataStore)
+        clientPrefViewModel =
+            ViewModelProvider(this, ClientPreferencesFactory(pref))[ClientPrefViewModel::class.java]
+
+        val adapter = OrderAdapter()
         binding.rvHistory.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvHistory.adapter = adapter
 
-        viewModel.loadOrders().observe(requireActivity()){histories ->
-            if (histories.isNotEmpty()){
-                showRecyclerView(histories)
-            }else{
+        clientPrefViewModel.getSessionUser().observe(requireActivity()){session ->
+            if (session != null){
+                clientName = session.fullName
+            }
+
+        }
+
+        viewModel.loadOrders(clientName).observe(requireActivity()) { orders ->
+            if (orders.isNotEmpty()) {
+                showRecyclerView(orders)
+            } else {
                 binding.titleEmpty.visibility = View.VISIBLE
             }
         }
@@ -44,7 +61,7 @@ class OrderFragment : Fragment() {
     private fun showRecyclerView(orders: List<OrderEntity>) {
         binding.rvHistory.visibility = View.VISIBLE
         binding.titleEmpty.visibility = View.GONE
-        val adapter = OrderAdapter(requireContext())
+        val adapter = OrderAdapter()
         binding.rvHistory.adapter = adapter
         adapter.submitList(orders)
     }

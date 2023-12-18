@@ -15,7 +15,6 @@ import com.capstoneproject.clothizeapp.client.data.local.entity.OrderEntity
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
-
     abstract fun measureDao(): MeasurementDao
     abstract fun orderDao(): OrderDao
 

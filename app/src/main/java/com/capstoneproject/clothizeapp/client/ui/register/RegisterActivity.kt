@@ -20,6 +20,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var loadingDialog: AlertDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun init() {
         auth = Firebase.auth
+
+        loadingDialog = loadingDialog()
 
         binding.btnRegisBack.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -102,11 +105,11 @@ class RegisterActivity : AppCompatActivity() {
         val password = binding.passwordRegis.text.toString().trim()
 
 
-        loadingDialog(true)
+        loadingDialog.show()
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    loadingDialog(false)
+                    loadingDialog.dismiss()
                     auth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
                         successDialog()
                     }?.addOnFailureListener {
@@ -117,7 +120,7 @@ class RegisterActivity : AppCompatActivity() {
                         ).show()
                     }
                 } else {
-                    loadingDialog(false)
+                    loadingDialog.dismiss()
                     val exception = task.exception
                     if (exception is FirebaseAuthUserCollisionException) {
                         errorDialog()
@@ -164,14 +167,14 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadingDialog(state: Boolean) {
+    private fun loadingDialog(): AlertDialog {
         val view = layoutInflater.inflate(R.layout.dialog_loading, null)
         val builder = AlertDialog.Builder(this@RegisterActivity)
         builder.setView(view)
 
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        if (state) dialog.show() else dialog.dismiss()
+        return dialog
     }
 
     private fun playAnimation() {

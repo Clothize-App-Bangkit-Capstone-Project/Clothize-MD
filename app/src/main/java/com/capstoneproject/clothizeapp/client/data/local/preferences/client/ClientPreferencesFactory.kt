@@ -3,7 +3,7 @@ package com.capstoneproject.clothizeapp.client.data.local.preferences.client
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class ClientPreferencesFactory(private val pref: UserPreferences) : ViewModelProvider.NewInstanceFactory() {
+class ClientPreferencesFactory(private val pref: ClientPreferences) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

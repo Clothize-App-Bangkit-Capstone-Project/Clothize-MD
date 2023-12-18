@@ -18,58 +18,49 @@ class DetailOrderActivity : AppCompatActivity() {
         init()
     }
 
-    private fun init(){
+    private fun init() {
         viewModel = obtainViewModel(this)
 
-        val status = intent.getStringExtra(STATUS)
-        val gender = intent.getStringExtra(GENDER)
-        val type = intent.getStringExtra(TYPE)
-        val est = intent.getStringExtra(ESTIMATION)
+        val id = intent.getIntExtra(ID, 0)
 
-        if (status != null && gender != null && type != null && est != null) {
-            loadContent(status, gender, type, est)
-        }
+        loadContent(id)
 
         binding.btnBack.setOnClickListener {
             finish()
         }
     }
 
-    private fun loadContent(status: String, gender: String, type: String, est: String){
-        binding.tvStatus.text = status
-        binding.tvGender.text = gender
-        binding.tvService.text = type
-        binding.tvEstimation.text = est
+    private fun loadContent(id: Int) {
+        binding.apply {
+            viewModel.getOrder(id).observe(this@DetailOrderActivity) { order ->
+                order?.apply {
+                    tvTailorName.text = tailorName
+                    tvStatus.text = status
+                    tvGender.text = gender
+                    tvService.text = service
+                    tvClothingColor.text = color
+                    tvClothingSize.text = size
+                    tvQty.text = "$qty pcs"
+                    tvEstimation.text = "$estimation days"
+                    tvOrderDate.text = orderDate
 
-        when(status){
-            "Finished" -> {
-                binding.btnApprove.visibility = View.GONE
-                binding.btnRejected.visibility = View.GONE
-            }
-            "Pending" -> {
-                binding.boxNote.visibility = View.GONE
-                binding.btnApprove.visibility = View.GONE
-                binding.btnRejected.visibility = View.GONE
-                binding.boxFeedback.visibility = View.GONE
-                binding.boxPrice.visibility = View.GONE
-                binding.boxTotalPrice.visibility = View.GONE
-            }
-            "Rejected" -> {
-                binding.btnApprove.visibility = View.GONE
-                binding.btnRejected.visibility = View.GONE
-                binding.boxNote.visibility = View.GONE
-                binding.boxPrice.visibility = View.GONE
-                binding.boxTotalPrice.visibility = View.GONE
-            }
-            "Offer" -> {
-                binding.boxNote.visibility = View.GONE
-            }
-            else -> {
-                binding.btnApprove.visibility = View.GONE
-                binding.btnRejected.visibility = View.GONE
-                binding.boxNote.visibility = View.GONE
+                    when (status) {
+                        "Finished" -> setupFinished()
+
+                        "Pending" -> setupPending()
+
+                        "Rejected" -> setupRejected()
+
+                        "Offer" -> setupOffer()
+
+                        else -> setupOnProgress()
+                    }
+                }
+
             }
         }
+
+
     }
 
     private fun obtainViewModel(activity: Activity): OrderViewModel {
@@ -79,7 +70,58 @@ class DetailOrderActivity : AppCompatActivity() {
         )[OrderViewModel::class.java]
     }
 
-    companion object{
+    private fun setupFinished() {
+        binding.apply {
+            btnApprove.visibility = View.GONE
+            btnRejected.visibility = View.GONE
+        }
+    }
+
+    private fun setupPending() {
+        binding.apply {
+            boxNote.visibility = View.GONE
+            btnApprove.visibility = View.GONE
+            btnRejected.visibility = View.GONE
+            boxFeedback.visibility = View.GONE
+            boxPrice.visibility = View.GONE
+            boxTotalPrice.visibility = View.GONE
+        }
+    }
+
+    private fun setupRejected() {
+        binding.apply {
+            btnApprove.visibility = View.GONE
+            btnRejected.visibility = View.GONE
+            boxNote.visibility = View.GONE
+            boxPrice.visibility = View.GONE
+            boxTotalPrice.visibility = View.GONE
+        }
+    }
+
+    private fun setupOffer() {
+        binding.apply {
+            boxNote.visibility = View.GONE
+
+            btnApprove.setOnClickListener {
+
+            }
+
+            btnRejected.setOnClickListener {
+
+            }
+        }
+    }
+
+    private fun setupOnProgress() {
+        binding.apply {
+            btnApprove.visibility = View.GONE
+            btnRejected.visibility = View.GONE
+            boxNote.visibility = View.GONE
+        }
+    }
+
+    companion object {
+        const val ID = "id"
         const val STATUS = "status"
         const val GENDER = "gender"
         const val TYPE = "type"

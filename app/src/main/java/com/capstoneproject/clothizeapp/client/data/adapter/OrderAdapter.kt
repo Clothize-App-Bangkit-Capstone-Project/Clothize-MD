@@ -1,6 +1,5 @@
 package com.capstoneproject.clothizeapp.client.data.adapter
 
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,9 +12,9 @@ import com.capstoneproject.clothizeapp.client.data.local.entity.OrderEntity
 import com.capstoneproject.clothizeapp.client.ui.client.order.DetailOrderActivity
 import com.capstoneproject.clothizeapp.databinding.ItemOrderClientBinding
 
-class OrderAdapter(private val context: Context) :
+class OrderAdapter() :
     ListAdapter<OrderEntity, OrderAdapter.OrderViewHolder>(DIFF_CALLBACK) {
-    class OrderViewHolder(private var binding: ItemOrderClientBinding, private var context: Context) :
+    class OrderViewHolder(private var binding: ItemOrderClientBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(itemCount: Int, position: Int, order: OrderEntity) {
 
@@ -30,25 +29,25 @@ class OrderAdapter(private val context: Context) :
                     if (position == itemCount - 1) marginBottomLast else marginBottomNormal
                 cardItemHistory.layoutParams = marginLayoutParams
 
-                tvTailor.text = order.tailor
-                tvOrderType.text = "${order.type} - ${order.gender}"
+                tvTailor.text = order.tailorName
+                tvOrderType.text = "${order.service} - ${order.gender}"
                 tvEstimation.text = "Estimate: ${order.estimation} days"
 
                 tvStatus.text = order.status
-                tvStatus.setTextColor(ContextCompat.getColor(context, R.color.black))
+                tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
                 when(order.status.lowercase()){
                     "finished" -> {
-                        tvStatus.background = context.resources.getDrawable(R.drawable.bg_green_finish)
+                        tvStatus.background = itemView.context.resources.getDrawable(R.drawable.bg_green_finish)
                     }
                     "on-progress" -> {
-                        tvStatus.background = context.resources.getDrawable(R.drawable.bg_yellow_on_progress)
+                        tvStatus.background = itemView.context.resources.getDrawable(R.drawable.bg_yellow_on_progress)
                     }
                     "rejected"-> {
-                        tvStatus.background = context.resources.getDrawable(R.drawable.bg_red_rejected)
-                        tvStatus.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        tvStatus.background = itemView.context.resources.getDrawable(R.drawable.bg_red_rejected)
+                        tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
                     }
                     else -> {
-                        tvStatus.background = context.resources.getDrawable(R.drawable.bg_gray_pending)
+                        tvStatus.background = itemView.context.resources.getDrawable(R.drawable.bg_gray_pending)
                     }
                 }
             }
@@ -60,7 +59,7 @@ class OrderAdapter(private val context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         val binding =
             ItemOrderClientBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return OrderViewHolder(binding, context)
+        return OrderViewHolder(binding)
     }
 
 
@@ -69,12 +68,9 @@ class OrderAdapter(private val context: Context) :
         if (order != null) {
             holder.bind(itemCount, position, order)
             holder.itemView.setOnClickListener {
-                val intentToDetailOrder = Intent(context, DetailOrderActivity::class.java)
-                intentToDetailOrder.putExtra(DetailOrderActivity.TYPE, order.type)
-                intentToDetailOrder.putExtra(DetailOrderActivity.GENDER, order.gender)
-                intentToDetailOrder.putExtra(DetailOrderActivity.STATUS, order.status)
-                intentToDetailOrder.putExtra(DetailOrderActivity.ESTIMATION, order.estimation.toString())
-                context.startActivity(intentToDetailOrder)
+                val intentToDetailOrder = Intent(holder.itemView.context, DetailOrderActivity::class.java)
+                intentToDetailOrder.putExtra(DetailOrderActivity.ID, order.id)
+                holder.itemView.context.startActivity(intentToDetailOrder)
             }
         }
     }

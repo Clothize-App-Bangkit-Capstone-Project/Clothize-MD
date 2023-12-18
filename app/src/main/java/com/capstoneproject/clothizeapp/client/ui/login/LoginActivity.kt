@@ -10,13 +10,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferencesFactory
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientSession
-import com.capstoneproject.clothizeapp.client.data.local.preferences.client.UserPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.dataStore
 import com.capstoneproject.clothizeapp.client.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.client.ui.register.RegisterActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityLoginBinding
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorPrefViewModel
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorPreferences
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorPreferencesFactory
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorSession
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.dataTailorStore
+import com.capstoneproject.clothizeapp.tailor.ui.MainTailorActivity
 import com.capstoneproject.clothizeapp.utils.AnimationPackage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -26,8 +32,10 @@ import com.google.firebase.ktx.Firebase
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var pref: UserPreferences
+    private lateinit var clientPref: ClientPreferences
+    private lateinit var tailorPref: TailorPreferences
     private lateinit var clientPrefViewModel: ClientPrefViewModel
+    private lateinit var tailorPrefViewModel: TailorPrefViewModel
     private lateinit var auth: FirebaseAuth
     private lateinit var dialog: AlertDialog
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,9 +50,13 @@ class LoginActivity : AppCompatActivity() {
 
     private fun init() {
         auth = Firebase.auth
-        pref = UserPreferences.getInstance(application.dataStore)
+        clientPref = ClientPreferences.getInstance(application.dataStore)
         clientPrefViewModel =
-            ViewModelProvider(this, ClientPreferencesFactory(pref))[ClientPrefViewModel::class.java]
+            ViewModelProvider(this, ClientPreferencesFactory(clientPref))[ClientPrefViewModel::class.java]
+
+        tailorPref = TailorPreferences.getInstance(application.dataTailorStore)
+        tailorPrefViewModel =
+            ViewModelProvider(this, TailorPreferencesFactory(tailorPref))[TailorPrefViewModel::class.java]
 
         binding.tvIntentRegis.setOnClickListener {
             val intentToRegister = Intent(this, RegisterActivity::class.java)
@@ -74,17 +86,32 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user?.isEmailVerified == true) {
-                        val userSession = ClientSession(
-                            email = user.email.toString(),
-                            username = "ucup123",
-                            address = "Jl.lorem ipsum"
-                        )
 
-                        clientPrefViewModel.saveSessionUser(userSession)
+                        if (emailUsername != "alfaresnurdin77@gmail.com"){
+                            val userSession = ClientSession(
+                                email = user.email.toString(),
+                                username = "ucup123",
+                                address = "Jl.lorem ipsum"
+                            )
 
-                        val intentToMain = Intent(this, MainClientActivity::class.java)
-                        finish()
-                        startActivity(intentToMain)
+                            clientPrefViewModel.saveSessionUser(userSession)
+                            val intentToMain = Intent(this, MainClientActivity::class.java)
+                            finish()
+                            startActivity(intentToMain)
+                        }else{
+
+                            val userSession = TailorSession(
+                                email = user.email.toString(),
+                                username = "ucup123",
+                                address = "Jl.lorem ipsum"
+                            )
+
+                            tailorPrefViewModel.saveSessionUser(userSession)
+
+                            val intentToTailor = Intent(this, MainTailorActivity::class.java)
+                            finish()
+                            startActivity(intentToTailor)
+                        }
                     } else {
                         Toast.makeText(
                             this,
@@ -100,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this,
-                            "There is problem to create account!",
+                            "There is problem to login account!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

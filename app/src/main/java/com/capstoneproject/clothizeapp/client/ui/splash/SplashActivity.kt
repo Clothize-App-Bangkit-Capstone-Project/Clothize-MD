@@ -6,12 +6,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferencesFactory
-import com.capstoneproject.clothizeapp.client.data.local.preferences.client.UserPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.dataStore
 import com.capstoneproject.clothizeapp.client.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.client.ui.login.LoginActivity
 import com.capstoneproject.clothizeapp.databinding.ActivitySplashBinding
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorPrefViewModel
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorPreferences
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.TailorPreferencesFactory
+import com.capstoneproject.clothizeapp.tailor.data.local.preferences.dataTailorStore
+import com.capstoneproject.clothizeapp.tailor.ui.MainTailorActivity
 import com.capstoneproject.clothizeapp.utils.AnimationPackage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +26,7 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
     private lateinit var clientPrefViewModel: ClientPrefViewModel
+    private lateinit var tailorPrefViewModel: TailorPrefViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -30,25 +36,46 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        val pref = UserPreferences.getInstance(application.dataStore)
+        val clientPref = ClientPreferences.getInstance(application.dataStore)
         clientPrefViewModel =
-            ViewModelProvider(this, ClientPreferencesFactory(pref))[ClientPrefViewModel::class.java]
+            ViewModelProvider(
+                this,
+                ClientPreferencesFactory(clientPref)
+            )[ClientPrefViewModel::class.java]
 
-        val intentToMain = Intent(this, MainClientActivity::class.java)
+        val tailorPref = TailorPreferences.getInstance(application.dataTailorStore)
+        tailorPrefViewModel =
+            ViewModelProvider(
+                this,
+                TailorPreferencesFactory(tailorPref)
+            )[TailorPrefViewModel::class.java]
+
+
+        val intentToMainClient = Intent(this, MainClientActivity::class.java)
+        val intentToMainTailor = Intent(this, MainTailorActivity::class.java)
         val intentToLogin = Intent(this, LoginActivity::class.java)
         CoroutineScope(Dispatchers.Main).launch {
             delay(3000)
             clientPrefViewModel.getSessionUser().observe(this@SplashActivity) { session ->
                 if (session != null) {
-                    startActivity(intentToMain)
+                    startActivity(intentToMainClient)
                     finish()
                 } else {
-                    startActivity(intentToLogin)
-                    finish()
+                    tailorPrefViewModel.getSessionUser()
+                        .observe(this@SplashActivity) { sessionTailor ->
+                            if (sessionTailor != null) {
+                                startActivity(intentToMainTailor)
+                                finish()
+                            } else {
+                                startActivity(intentToLogin)
+                                finish()
+                            }
+                        }
                 }
             }
         }
     }
+
 
     private fun playAnimation() {
         // geser atas cloth sebesar 100dp dan tampilin ing

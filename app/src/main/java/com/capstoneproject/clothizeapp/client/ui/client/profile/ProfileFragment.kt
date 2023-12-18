@@ -18,9 +18,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
+import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferencesFactory
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientSession
-import com.capstoneproject.clothizeapp.client.data.local.preferences.client.UserPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.dataStore
 import com.capstoneproject.clothizeapp.client.ui.custom_view.CustomEmailEditText
 import com.capstoneproject.clothizeapp.client.ui.custom_view.CustomPasswordEditText
@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
     private fun init() {
         auth = FirebaseAuth.getInstance()
 
-        val pref = UserPreferences.getInstance(requireActivity().dataStore)
+        val pref = ClientPreferences.getInstance(requireActivity().dataStore)
         clientPrefViewModel =
             ViewModelProvider(this, ClientPreferencesFactory(pref))[ClientPrefViewModel::class.java]
         profileViewModel = obtainViewModel(requireActivity())
@@ -377,7 +377,7 @@ class ProfileFragment : Fragment() {
         with(alertDialogBuilder) {
             setTitle("Picker Imager")
             setMessage("Choose resource to pick your image!")
-            setCancelable(false)
+            setCancelable(true)
             setPositiveButton("Gallery") { _, _ ->
                 launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }

@@ -17,15 +17,17 @@ class MainClientActivity : AppCompatActivity() {
         setContentView(binding.root)
         init()
 
-        binding.fabMeasurement.setOnClickListener {
-            val intentToMeasurement = Intent(this, MeasurementActivity::class.java)
-            startActivity(intentToMeasurement)
-        }
+
     }
 
 
     private fun init(){
         val navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNav.setupWithNavController(navController)
+
+        binding.fabMeasurement.setOnClickListener {
+            val intentToMeasurement = Intent(this, MeasurementActivity::class.java)
+            startActivity(intentToMeasurement)
+        }
     }
 }
