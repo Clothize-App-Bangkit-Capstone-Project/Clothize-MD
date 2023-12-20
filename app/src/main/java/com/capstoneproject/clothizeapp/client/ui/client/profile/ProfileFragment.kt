@@ -16,6 +16,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.capstoneproject.clothizeapp.R
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferences
@@ -30,16 +34,35 @@ import com.capstoneproject.clothizeapp.utils.getImageUri
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var clientPrefViewModel: ClientPrefViewModel
     private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var auth: FirebaseAuth
     private lateinit var loadingDialog: AlertDialog
     private lateinit var clientSession: ClientSession
     private var currentImageUri: Uri? = null
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+    private var user: FirebaseUser? = null
+    private lateinit var storage: FirebaseStorage
+
 
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.TakePicture()
@@ -74,6 +97,9 @@ class ProfileFragment : Fragment() {
 
     private fun init() {
         auth = FirebaseAuth.getInstance()
+        db = Firebase.firestore
+        storage = FirebaseStorage.getInstance()
+        user = auth.currentUser
 
         val pref = ClientPreferences.getInstance(requireActivity().dataStore)
         clientPrefViewModel =
@@ -107,10 +133,28 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showUser(userSession: ClientSession) {
-        binding.tvUsername.text = userSession.username
-        binding.nameEditText.setText(userSession.fullName)
-        binding.phoneEditText.setText(userSession.phone)
-        binding.addressEditText.setText(userSession.address)
+        val drawable = CircularProgressDrawable(requireActivity())
+        drawable.setColorSchemeColors(R.color.brown_gold)
+        drawable.centerRadius = 30f
+        drawable.strokeWidth = 5f
+        drawable.start()
+        binding.apply {
+            tvUsername.text = userSession.username
+            nameEditText.setText(userSession.fullName)
+            phoneEditText.setText(userSession.phone)
+            addressEditText.setText(userSession.address)
+            Glide.with(requireActivity())
+                .load(userSession.urlPhoto)
+                .placeholder(drawable)
+                .transition(
+                    DrawableTransitionOptions.withCrossFade(
+                        DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+                    )
+                )
+                .into(avatar)
+        }
+
+
     }
 
     private fun configureSpecificElement(tag: String) {
@@ -203,30 +247,47 @@ class ProfileFragment : Fragment() {
         session: ClientSession,
         view: View,
     ) {
-        val user = auth.currentUser
-
         if (checkFillOrNot(view)) {
-            Log.d("TAG", "changeAccountDialog: $newMail, $oldPassword, $newPassword")
             val credential = EmailAuthProvider.getCredential(session.email, oldPassword)
             loadingDialog.show()
             user?.reauthenticate(credential)?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (newPassword.isEmpty()) {
-                        user.verifyBeforeUpdateEmail(newMail)
-                            .addOnCompleteListener { status ->
-                                loadingDialog.dismiss()
-                                if (status.isSuccessful) {
-                                    successDialog()
-                                    session.email = newMail
-                                } else {
-                                    errorDialog()
-                                }
-                            }.addOnFailureListener {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val isExist = checkExistEmail(newMail)
+
+                            if (!isExist) {
+                                user!!.verifyBeforeUpdateEmail(newMail)
+                                    .addOnCompleteListener { status ->
+                                        loadingDialog.dismiss()
+                                        if (status.isSuccessful) {
+                                            val updateUser = mapOf(
+                                                "email" to newMail,
+                                            )
+
+                                            db.collection("users").document(user!!.uid)
+                                                .update(updateUser).addOnSuccessListener {
+                                                    session.email = newMail
+                                                    successDialog()
+                                                }.addOnFailureListener {
+                                                    errorDialog()
+                                                }
+
+                                        } else {
+                                            errorDialog()
+                                        }
+                                    }.addOnFailureListener {
+                                        loadingDialog.dismiss()
+                                        errorDialog()
+                                    }
+                            } else {
                                 loadingDialog.dismiss()
                                 errorDialog()
                             }
+                        }
+
                     } else {
-                        user.updatePassword(newPassword).addOnCompleteListener { task ->
+                        user!!.updatePassword(newPassword).addOnCompleteListener { task ->
                             loadingDialog.dismiss()
                             if (task.isSuccessful) {
                                 successDialog()
@@ -255,36 +316,103 @@ class ProfileFragment : Fragment() {
 
     }
 
+    private suspend fun checkExistEmail(email: String): Boolean = withContext(Dispatchers.IO){
+        val isExist: Boolean
+        val test = db.collection("users").whereEqualTo("email", email).get().await()
+        isExist = test.documents.size > 0
+        isExist
+    }
+
 
     private fun updateUserData() {
         val fullName = binding.nameEditText.text.toString()
         val phone = binding.phoneEditText.text.toString()
         val address = binding.addressEditText.text.toString()
-        var isSuccessAdd = false
 
-        clientPrefViewModel.getSessionUser().observe(requireActivity()) { session ->
-            isSuccessAdd = if (session != null) {
-                clientSession = ClientSession(
-                    username = session.username,
-                    email = session.email,
-                    fullName = fullName,
-                    phone = phone,
-                    address = address,
-                )
-                true
+
+
+        CoroutineScope(Dispatchers.Main).launch {
+            loadingDialog.show()
+            val urlPhoto = if (currentImageUri != null) {
+                saveImage()
             } else {
-                false
-
+                clientSession.urlPhoto.ifEmpty {
+                    ""
+                }
             }
-        }
 
-        if (isSuccessAdd) {
-            clientPrefViewModel.saveSessionUser(clientSession)
-            successDialog()
-        } else errorDialog()
+            val updateUser = mapOf(
+                "fullname" to fullName,
+                "address" to address,
+                "phone" to phone,
+                "avatar" to urlPhoto
+            )
+
+            db.collection("clients").document(user!!.uid).update(updateUser)
+                .addOnSuccessListener {
+                    loadingDialog.dismiss()
+                    clientSession = ClientSession(
+                        username = clientSession.username,
+                        email = clientSession.email,
+                        fullName = fullName,
+                        phone = phone,
+                        address = address,
+                        urlPhoto = urlPhoto,
+                    )
+
+                    clientPrefViewModel.saveSessionUser(clientSession)
+                    successDialog()
+                }.addOnFailureListener {
+                    loadingDialog.dismiss()
+                    errorDialog()
+                }
+
+//            clientPrefViewModel.getSessionUser().observe(requireActivity()) { session ->
+//                if (session != null) {
+//
+//
+//
+//                }
+//            }
+        }
 
 
     }
+
+    private suspend fun saveImage(): String = withContext(Dispatchers.IO) {
+        val storageRef = storage.reference
+        val filename = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val imageRef = storageRef.child("avatar/client/${filename}.jpg")
+        var imageUrl = ""
+
+        currentImageUri?.let {
+            try {
+                // Gunakan async untuk membuat saveImage menunggu proses upload
+                val uploadTask = async {
+                    imageRef.putFile(it).await()
+                }
+
+                uploadTask.await() // Menunggu proses upload selesai
+
+                val downloadUrl = imageRef.downloadUrl.await()
+                imageUrl = downloadUrl.toString()
+                Log.d("TAG", "saveImage: $imageUrl")
+
+            } catch (exception: Exception) {
+                // Handle kesalahan di sini
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        requireActivity(),
+                        "There is a problem to add the image!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        imageUrl
+    }
+
 
     private fun obtainViewModel(activity: Activity): ProfileViewModel {
         val factory = ProfileViewModelFactory.getInstance(activity.applicationContext)

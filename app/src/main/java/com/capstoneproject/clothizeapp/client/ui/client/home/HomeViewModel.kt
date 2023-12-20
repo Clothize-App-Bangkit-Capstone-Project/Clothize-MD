@@ -11,11 +11,11 @@ class HomeViewModel(private val repository: TailorRepository): ViewModel() {
     val tailorList: LiveData<List<Tailor>> get() = _tailorList
 
     fun getTailorList() {
-        _tailorList.value = repository.getTailorList()
+//        _tailorList.value = repository.getTailorList()
     }
 
     fun getTailorByName(name: String){
-        _tailorList.value = repository.getTailorListByName(name)
+//        _tailorList.value = repository.getTailorListByName(name)
     }
 
 }

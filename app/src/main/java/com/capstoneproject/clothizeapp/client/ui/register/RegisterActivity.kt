@@ -14,6 +14,8 @@ import com.capstoneproject.clothizeapp.utils.AnimationPackage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
@@ -21,6 +23,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var db: FirebaseFirestore
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +38,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun init() {
         auth = Firebase.auth
-
+        db = Firebase.firestore
         loadingDialog = loadingDialog()
 
         binding.btnRegisBack.setOnClickListener {
@@ -103,15 +106,36 @@ class RegisterActivity : AppCompatActivity() {
     private fun setNewUser() {
         val email = binding.emailRegis.text.toString().trim()
         val password = binding.passwordRegis.text.toString().trim()
+        val username = binding.nameRegis.text.toString().trim()
 
 
         loadingDialog.show()
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    loadingDialog.dismiss()
                     auth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
-                        successDialog()
+                        val createUser = hashMapOf(
+                            "email" to email,
+                            "username" to username,
+                            "isVerified" to false,
+                            "role" to "client"
+                        )
+
+                        db.collection("users").document(auth.currentUser!!.uid).set(createUser)
+                            .addOnSuccessListener {
+
+                                loadingDialog.dismiss()
+                                successDialog()
+
+                            }.addOnFailureListener {
+
+                            Toast.makeText(
+                                this,
+                                "There is problem to store account!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
                     }?.addOnFailureListener {
                         Toast.makeText(
                             this,
@@ -212,7 +236,8 @@ class RegisterActivity : AppCompatActivity() {
         val titlePassConfirmX = AnimationPackage.translateX(binding.tvRegisConPass, 500, -30f, 0f)
 
         val passConfirmTIL = AnimationPackage.fadeIn(binding.passwordConfirmEditTextLayout, 500)
-        val passConfirmTILX = AnimationPackage.translateX(binding.passwordConfirmEditTextLayout, 500, -30f, 0f)
+        val passConfirmTILX =
+            AnimationPackage.translateX(binding.passwordConfirmEditTextLayout, 500, -30f, 0f)
 
         // Register Button
         val btnRegister = AnimationPackage.fadeIn(binding.btnRegis, 500)

@@ -28,6 +28,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -36,9 +40,10 @@ class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var clientPrefViewModel: ClientPrefViewModel
     private lateinit var geocoder: Geocoder
     private lateinit var mMap: GoogleMap
+    private lateinit var db: FirebaseFirestore
     private var nameTailor = ""
-    private var descriptionTailor = ""
-    private var photoTailor = ""
+    private var phoneTailor = ""
+    private var tailorId = ""
     private var latitude = 0.0
     private var longitude = 0.0
 
@@ -97,6 +102,7 @@ class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
             )
 
         }
+        db = Firebase.firestore
 
         val pref = ClientPreferences.getInstance(application.dataStore)
         clientPrefViewModel =
@@ -119,7 +125,8 @@ class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (session != null) {
                     val intentToDetail = Intent(this@DetailActivity, OrderFormActivity::class.java)
                     intentToDetail.putExtra(OrderFormActivity.TAILOR, nameTailor)
-                    intentToDetail.putExtra(OrderFormActivity.CLIENT_NAME, session.fullName)
+                    intentToDetail.putExtra(OrderFormActivity.TAILOR_PHONE, phoneTailor)
+                    intentToDetail.putExtra(OrderFormActivity.TAILOR_ID, tailorId)
                     startActivity(intentToDetail)
                 }
 
@@ -135,25 +142,44 @@ class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
         drawable.strokeWidth = 5f
         drawable.start()
 
-        nameTailor = intent.getStringExtra("nameTailor").toString()
-        descriptionTailor = intent.getStringExtra("descriptionTailor").toString()
-        photoTailor = intent.getStringExtra("photoTailor").toString()
-        latitude = intent.getDoubleExtra("latitude", 0.0)
-        longitude = intent.getDoubleExtra("longitude", 0.0)
-        if (nameTailor != "" && descriptionTailor != "" && photoTailor != "") {
-            binding.apply {
-                detailTitleTailor.text = nameTailor
-                detailDescTailor.text = descriptionTailor
-                Glide.with(this@DetailActivity)
-                    .load(photoTailor)
-                    .placeholder(drawable)
-                    .transition(
-                        DrawableTransitionOptions.withCrossFade(
-                            DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-                        )
-                    )
-                    .into(imgDetail)
-            }
+        nameTailor = intent.getStringExtra(TAILOR_NAME).toString()
+        latitude = intent.getDoubleExtra(TAILOR_LATITUDE, 0.0)
+        longitude = intent.getDoubleExtra(TAILOR_LONGITUDE, 0.0)
+
+        if (nameTailor != "") {
+
+            db.collection("tailors")
+                .whereEqualTo("storeName", nameTailor)
+                .whereEqualTo("location", GeoPoint(latitude, longitude))
+                .limit(1)
+                .get()
+                .addOnSuccessListener { docs ->
+                    val data = docs.documents[0]
+
+                    phoneTailor = data.data!!["phone"].toString()
+                    tailorId = data.id
+
+                    binding.apply {
+                        detailTitleTailor.text = data.data!!["storeName"].toString()
+                        detailDescTailor.text = data.data!!["description"].toString()
+                        Glide.with(this@DetailActivity)
+                            .load(data.data!!["storeImg"].toString())
+                            .placeholder(drawable)
+                            .transition(
+                                DrawableTransitionOptions.withCrossFade(
+                                    DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true)
+                                        .build()
+                                )
+                            )
+                            .into(imgDetail)
+                    }
+
+                }.addOnFailureListener {
+                    Toast.makeText(this@DetailActivity, "There is problem to fetch data!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+
+
         }
 
 
@@ -195,6 +221,12 @@ class DetailActivity : AppCompatActivity(), OnMapReadyCallback {
             "geo:${location.latitude},${location.longitude}?z=15&q=${location.latitude},${location.longitude}($placeName)"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         startActivity(intent)
+    }
+
+    companion object {
+        const val TAILOR_NAME = "tailor_name"
+        const val TAILOR_LATITUDE = "tailor_lat"
+        const val TAILOR_LONGITUDE = "tailor_lon"
     }
 
 

@@ -26,8 +26,16 @@ import com.capstoneproject.clothizeapp.tailor.ui.MainTailorActivity
 import com.capstoneproject.clothizeapp.utils.AnimationPackage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
@@ -38,6 +46,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tailorPrefViewModel: TailorPrefViewModel
     private lateinit var auth: FirebaseAuth
     private lateinit var dialog: AlertDialog
+
+    private lateinit var db: FirebaseFirestore
+    private lateinit var user: FirebaseUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -50,13 +62,21 @@ class LoginActivity : AppCompatActivity() {
 
     private fun init() {
         auth = Firebase.auth
+        db = Firebase.firestore
+
         clientPref = ClientPreferences.getInstance(application.dataStore)
         clientPrefViewModel =
-            ViewModelProvider(this, ClientPreferencesFactory(clientPref))[ClientPrefViewModel::class.java]
+            ViewModelProvider(
+                this,
+                ClientPreferencesFactory(clientPref)
+            )[ClientPrefViewModel::class.java]
 
         tailorPref = TailorPreferences.getInstance(application.dataTailorStore)
         tailorPrefViewModel =
-            ViewModelProvider(this, TailorPreferencesFactory(tailorPref))[TailorPrefViewModel::class.java]
+            ViewModelProvider(
+                this,
+                TailorPreferencesFactory(tailorPref)
+            )[TailorPrefViewModel::class.java]
 
         binding.tvIntentRegis.setOnClickListener {
             val intentToRegister = Intent(this, RegisterActivity::class.java)
@@ -82,36 +102,146 @@ class LoginActivity : AppCompatActivity() {
         dialog.show()
         auth.signInWithEmailAndPassword(emailUsername, password)
             .addOnCompleteListener(this) { task ->
-                dialog.dismiss()
                 if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    if (user?.isEmailVerified == true) {
+                    user = auth.currentUser!!
+                    if (user.isEmailVerified) {
+                        db.collection("users").document(user.uid).get()
+                            .addOnSuccessListener { doc ->
+                                val updateUser = mapOf(
+                                    "isVerified" to true,
+                                )
 
-                        if (emailUsername != "alfaresnurdin77@gmail.com"){
-                            val userSession = ClientSession(
-                                email = user.email.toString(),
-                                username = "ucup123",
-                                address = "Jl.lorem ipsum"
-                            )
+                                if (doc.data?.get("role") == "client") {
 
-                            clientPrefViewModel.saveSessionUser(userSession)
-                            val intentToMain = Intent(this, MainClientActivity::class.java)
-                            finish()
-                            startActivity(intentToMain)
-                        }else{
+                                    db.collection("clients").document(user.uid).get()
+                                        .addOnSuccessListener { documents ->
+                                            CoroutineScope(Dispatchers.Main).launch {
+                                                if (!documents.exists()) {
+                                                    checkAndInsertNewClient()
 
-                            val userSession = TailorSession(
-                                email = user.email.toString(),
-                                username = "ucup123",
-                                address = "Jl.lorem ipsum"
-                            )
+                                                }
 
-                            tailorPrefViewModel.saveSessionUser(userSession)
+                                                db.collection("users").document(user.uid)
+                                                    .update(updateUser)
+                                                    .addOnSuccessListener {
+                                                        val userSession = ClientSession(
+                                                            email = doc.data?.get("email")
+                                                                .toString(),
+                                                            username = doc.data?.get("username")
+                                                                .toString(),
+                                                            fullName = if (documents.data != null) documents.data?.get(
+                                                                "fullname"
+                                                            ).toString() else "Client",
+                                                            phone = if (documents.data != null) documents.data?.get(
+                                                                "phone"
+                                                            ).toString() else "Client",
+                                                            address = if (documents.data != null) documents.data?.get(
+                                                                "address"
+                                                            ).toString() else "Client",
+                                                            urlPhoto = if (documents.data != null) documents.data?.get(
+                                                                "avatar"
+                                                            )
+                                                                .toString() else "https://firebasestorage.googleapis.com/v0/b/clothize-app-6879d.appspot.com/o/avatar%2Fuser%20(1).png?alt=media&token=f737a87d-3b5d-422e-9bc2-c8dabfa7b08f",
+                                                        )
 
-                            val intentToTailor = Intent(this, MainTailorActivity::class.java)
-                            finish()
-                            startActivity(intentToTailor)
-                        }
+                                                        clientPrefViewModel.saveSessionUser(
+                                                            userSession
+                                                        )
+                                                        dialog.dismiss()
+                                                        val intentToMain =
+                                                            Intent(
+                                                                this@LoginActivity,
+                                                                MainClientActivity::class.java
+                                                            )
+                                                        finish()
+                                                        startActivity(intentToMain)
+                                                    }.addOnFailureListener {
+                                                        dialog.dismiss()
+                                                        Toast.makeText(
+                                                            this@LoginActivity,
+                                                            "Your account does not exist!",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                            }
+
+                                        }
+
+
+                                } else {
+
+
+                                    db.collection("tailors").document(user.uid).get()
+                                        .addOnSuccessListener { documents ->
+                                            CoroutineScope(Dispatchers.Main).launch {
+                                                if (!documents.exists()) {
+                                                    checkAndInsertNewTailor()
+                                                }
+
+                                                db.collection("users").document(user.uid)
+                                                    .update(updateUser)
+                                                    .addOnSuccessListener {
+                                                        val userSession = TailorSession(
+                                                            email = doc.data?.get("email")
+                                                                .toString(),
+                                                            username = doc.data?.get("username")
+                                                                .toString(),
+                                                            storeName = if (documents.data != null) documents.data?.get(
+                                                                "storeName"
+                                                            ).toString() else "Tailor",
+                                                            phone = if (documents.data != null) documents.data?.get(
+                                                                "phone"
+                                                            ).toString() else "",
+                                                            urlPhoto = if (documents.data != null) documents.data?.get(
+                                                                "storeImg"
+                                                            )
+                                                                .toString() else "https://firebasestorage.googleapis.com/v0/b/clothize-app-6879d.appspot.com/o/avatar%2Fstore.png?alt=media&token=827737ad-861f-4d81-a423-872ed7a1b34c",
+                                                            location = if (documents.data != null) {
+                                                                val location =
+                                                                    documents.getGeoPoint("location")
+                                                                GeoPoint(
+                                                                    location?.latitude
+                                                                        ?: 0.0,
+                                                                    location?.longitude
+                                                                        ?: 0.0
+                                                                )
+                                                            } else {
+                                                                GeoPoint(
+                                                                    0.0,
+                                                                    0.0
+                                                                )
+                                                            }
+
+                                                        )
+
+                                                        tailorPrefViewModel.saveSessionUser(
+                                                            userSession
+                                                        )
+                                                        dialog.dismiss()
+                                                        val intentToTailor =
+                                                            Intent(
+                                                                this@LoginActivity,
+                                                                MainTailorActivity::class.java
+                                                            )
+                                                        finish()
+                                                        startActivity(intentToTailor)
+
+
+                                                    }.addOnFailureListener {
+                                                        dialog.dismiss()
+                                                        Toast.makeText(
+                                                            this@LoginActivity,
+                                                            "Your account does not exist!",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                            }
+
+
+                                        }
+
+                                }
+                            }
                     } else {
                         Toast.makeText(
                             this,
@@ -136,6 +266,58 @@ class LoginActivity : AppCompatActivity() {
 
             }
     }
+
+
+    private suspend fun checkAndInsertNewClient() = withContext(Dispatchers.IO) {
+        db.collection("clients").document(user.uid).get()
+            .addOnSuccessListener { documents ->
+                if (!documents.exists()) {
+                    val addClient = hashMapOf(
+                        "fullname" to "Client",
+                        "phone" to "",
+                        "address" to "",
+                        "avatar" to "https://firebasestorage.googleapis.com/v0/b/clothize-app-6879d.appspot.com/o/avatar%2Fuser%20(1).png?alt=media&token=f737a87d-3b5d-422e-9bc2-c8dabfa7b08f"
+                    )
+
+                    // insert new client
+                    db.collection("clients").document(user.uid).set(addClient)
+                        .addOnFailureListener {
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "Failed to add client!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                }
+            }.addOnFailureListener {
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Failed to add new client!",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+    }
+
+    private suspend fun checkAndInsertNewTailor() = withContext(Dispatchers.IO) {
+        val addTailor = mapOf(
+            "storeName" to "Tailor",
+            "phone" to "",
+            "location" to GeoPoint(0.0, 0.0),
+            "storeImg" to "https://firebasestorage.googleapis.com/v0/b/clothize-app-6879d.appspot.com/o/avatar%2Fstore.png?alt=media&token=827737ad-861f-4d81-a423-872ed7a1b34c",
+            "description" to "",
+        )
+
+        db.collection("tailors").document(user.uid)
+            .set(addTailor).addOnFailureListener {
+                Toast.makeText(
+                    this@LoginActivity,
+                    "There is problem to add Tailor!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
 
     private fun checkFillOrNot(): Boolean {
 
@@ -192,7 +374,7 @@ class LoginActivity : AppCompatActivity() {
         return dialog
     }
 
-    private fun playAnimation(){
+    private fun playAnimation() {
         // Banner
         val bannerFadeIn = AnimationPackage.fadeIn(binding.imgLogo, 700)
         val bannerMoveY = AnimationPackage.translateY(binding.imgLogo, 700, -50f, 0f)

@@ -4,6 +4,7 @@ package com.capstoneproject.clothizeapp.client.ui.client.measurements
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -19,15 +20,27 @@ import com.capstoneproject.clothizeapp.client.ui.client.MainClientActivity
 import com.capstoneproject.clothizeapp.databinding.ActivityMeasurementBinding
 import com.capstoneproject.clothizeapp.ml.Model
 import com.capstoneproject.clothizeapp.utils.getImageUri
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MeasurementActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMeasurementBinding
@@ -37,6 +50,10 @@ class MeasurementActivity : AppCompatActivity() {
     private var currentImageUri: Uri? = null
     private var typeClothes = ""
     private var gender = ""
+
+    private lateinit var db: FirebaseFirestore
+    private var user: FirebaseUser? = null
+    private lateinit var storage: FirebaseStorage
 
 
     private val launcherIntentCamera = registerForActivityResult(
@@ -67,6 +84,10 @@ class MeasurementActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        db = Firebase.firestore
+        storage = FirebaseStorage.getInstance()
+        user = FirebaseAuth.getInstance().currentUser
+
         loadingDialog = loadingDialog()
         viewModel = obtainViewModel(this)
 
@@ -118,6 +139,7 @@ class MeasurementActivity : AppCompatActivity() {
 
         binding.btnBack.setOnClickListener {
             val intentToMainClient = Intent(this, MainClientActivity::class.java)
+            finish()
             startActivity(intentToMainClient)
         }
 
@@ -154,23 +176,7 @@ class MeasurementActivity : AppCompatActivity() {
             loadingDialog.show()
 
             CoroutineScope(Dispatchers.Main).launch {
-                delay(2000)
-                loadingDialog.dismiss()
-                val size = modelCalculate(binding.weightEdt.text.toString().toFloat(), binding.heightEdt.text.toString().toFloat())
-                val parsingSize = when (size) {
-                    "XXL" -> "X2L"
-                    "XXXL" -> "X3L"
-                    else -> {
-                        size
-                    }
-                }
-
-                val intentToResult =
-                    Intent(this@MeasurementActivity, CalculateResultActivity::class.java)
-                intentToResult.putExtra(CalculateResultActivity.SIZE, parsingSize)
-                intentToResult.putExtra(CalculateResultActivity.GENDER, gender)
-                intentToResult.putExtra(CalculateResultActivity.TYPE, typeClothes)
-                startActivity(intentToResult)
+                insertData()
             }
         } else {
             Toast.makeText(this, "Please fill all input before calculate!", Toast.LENGTH_SHORT)
@@ -222,6 +228,86 @@ class MeasurementActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         return dialog
+    }
+
+
+    private fun insertData() {
+
+        binding.apply {
+            val weight = weightEdt.text.toString().toFloat()
+            val height = heightEdt.text.toString().toFloat()
+            val parsingSize = when (val size = modelCalculate(weight, height)) {
+                "XXL" -> "X2L"
+                "XXXL" -> "X3L"
+                else -> {
+                    size
+                }
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                val urlPhoto = saveImage()
+
+                // initialize data
+                val addMeasurement = hashMapOf(
+                    "clothingSize" to parsingSize,
+                    "clothingType" to typeClothes,
+                    "gender" to gender,
+                    "urlImg" to urlPhoto,
+                    "userId" to user!!.uid,
+                    "createdAt" to FieldValue.serverTimestamp(),
+                    "bodyGirth" to 0,
+                    "bodyLength" to 0,
+                    "chestGirth" to 0,
+                    "shoulderWidth" to 0,
+                )
+
+                db.collection("measurements").add(addMeasurement)
+                    .addOnSuccessListener {docs ->
+                        loadingDialog.dismiss()
+                        val intentToResult =
+                            Intent(this@MeasurementActivity, CalculateResultActivity::class.java)
+                        intentToResult.putExtra(CalculateResultActivity.MEASURE_ID, docs.id)
+                        startActivity(intentToResult)
+                    }.addOnFailureListener {
+                        Toast.makeText(this@MeasurementActivity, "There is problem to calculate!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+            }
+
+        }
+    }
+
+    private suspend fun saveImage(): String = withContext(Dispatchers.IO) {
+        val storageRef = storage.reference
+        val filename = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val imageRef = storageRef.child("images/measurement/${filename}.jpg")
+        var imageUrl = ""
+
+        currentImageUri?.let {
+            try {
+                // Gunakan async untuk membuat saveImage menunggu proses upload
+                val uploadTask = async {
+                    imageRef.putFile(it).await()
+                }
+
+                uploadTask.await() // Menunggu proses upload selesai
+
+                val downloadUrl = imageRef.downloadUrl.await()
+                imageUrl = downloadUrl.toString()
+                Log.d("TAG", "saveImage: $imageUrl")
+
+            } catch (exception: Exception) {
+                // Handle kesalahan di sini
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MeasurementActivity,
+                        "There is a problem to add the image!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        imageUrl
     }
 
 
@@ -283,10 +369,5 @@ class MeasurementActivity : AppCompatActivity() {
             "XXL",
             "XXXL",
         )
-    }
-
-
-    companion object {
-        const val MODEL_FILE = "model.tflite"
     }
 }

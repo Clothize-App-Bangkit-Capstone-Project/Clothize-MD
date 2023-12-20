@@ -21,7 +21,6 @@
             android:backgroundTint="@color/brown_gold"
             android:contentDescription="@string/btn_register"
             android:src="@drawable/ic_back_arrow"
-            app:elevation="30dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@null" />

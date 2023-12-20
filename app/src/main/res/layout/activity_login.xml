@@ -54,6 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:endIconMode="clear_text"
+            app:endIconTint="@color/brown_gold"
             android:textColorHint="@color/brown_gold"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"

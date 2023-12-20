@@ -108,6 +108,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_size_chest_circum"/>
         
         <TextView
+            android:id="@+id/created_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12, Nov 2023, 18:30"

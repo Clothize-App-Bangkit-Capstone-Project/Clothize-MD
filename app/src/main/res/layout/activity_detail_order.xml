@@ -19,7 +19,6 @@
                 android:layout_margin="16dp"
                 android:src="@drawable/ic_back_arrow"
                 app:tint="@null"
-                app:elevation="30dp"
                 android:backgroundTint="@color/brown_gold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -349,7 +348,7 @@
                     android:textColor="@color/brown_gold"
                     />
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/addressEditTextLayout"
+                    android:id="@+id/noteEditTextLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -357,7 +356,7 @@
                     app:endIconTint="@color/brown_gold">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/addressEditText"
+                        android:id="@+id/noteEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"

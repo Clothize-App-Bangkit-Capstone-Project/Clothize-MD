@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.capstoneproject.clothizeapp.R
-import com.capstoneproject.clothizeapp.client.data.local.entity.OrderEntity
+import com.capstoneproject.clothizeapp.client.api.response.Order
 import com.capstoneproject.clothizeapp.client.ui.client.order.DetailOrderActivity
 import com.capstoneproject.clothizeapp.databinding.ItemOrderClientBinding
 
 class OrderAdapter() :
-    ListAdapter<OrderEntity, OrderAdapter.OrderViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<Order, OrderAdapter.OrderViewHolder>(DIFF_CALLBACK) {
     class OrderViewHolder(private var binding: ItemOrderClientBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(itemCount: Int, position: Int, order: OrderEntity) {
+        fun bind(itemCount: Int, position: Int, order: Order) {
 
             binding.apply {
                 val marginLayoutParams =
@@ -35,7 +35,7 @@ class OrderAdapter() :
 
                 tvStatus.text = order.status
                 tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
-                when(order.status.lowercase()){
+                when(order.status!!.lowercase()){
                     "finished" -> {
                         tvStatus.background = itemView.context.resources.getDrawable(R.drawable.bg_green_finish)
                     }
@@ -69,7 +69,7 @@ class OrderAdapter() :
             holder.bind(itemCount, position, order)
             holder.itemView.setOnClickListener {
                 val intentToDetailOrder = Intent(holder.itemView.context, DetailOrderActivity::class.java)
-                intentToDetailOrder.putExtra(DetailOrderActivity.ID, order.id)
+                intentToDetailOrder.putExtra(DetailOrderActivity.ORDER_ID, order)
                 holder.itemView.context.startActivity(intentToDetailOrder)
             }
         }
@@ -77,17 +77,17 @@ class OrderAdapter() :
 
     companion object {
 
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<OrderEntity>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Order>() {
             override fun areItemsTheSame(
-                oldItem: OrderEntity,
-                newItem: OrderEntity,
+                oldItem: Order,
+                newItem: Order,
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.createdAt == newItem.createdAt
             }
 
             override fun areContentsTheSame(
-                oldItem: OrderEntity,
-                newItem: OrderEntity,
+                oldItem: Order,
+                newItem: Order,
             ): Boolean {
                 return oldItem == newItem
             }

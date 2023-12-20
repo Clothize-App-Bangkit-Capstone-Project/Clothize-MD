@@ -12,7 +12,7 @@ class TailorRepository(
     private val context: Context,
     private val appDatabase: AppDatabase,
 ) {
-    fun getTailorList(): List<Tailor>{
+    private fun getTailorList(): List<Tailor>{
         val inputStream = context.resources.openRawResource(R.raw.tailor)
         val jsonText = inputStream.bufferedReader().use { it.readText() }
         val listType = object : TypeToken<List<Tailor>>() {}.type
@@ -25,7 +25,7 @@ class TailorRepository(
         val listTailor = getTailorList()
         val filteredTailor = mutableListOf<Tailor>()
 
-        listTailor.filterTo(filteredTailor) { it.nameTailor.contains(name, ignoreCase = true) }
+        listTailor.filterTo(filteredTailor) { it.storeName!!.contains(name, ignoreCase = true) }
         return filteredTailor
     }
 

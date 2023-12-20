@@ -43,7 +43,7 @@ class MeasurementRepository(
     }
 
      fun loadSizeClothes(type: String, size: String, gender: String): DetailSize? {
-        val jsonFile = if (type == "t-shirts" || type == "shirts") {
+        val jsonFile = if (type.lowercase() == "t-shirts" || type.lowercase() == "shirts") {
             context.resources.openRawResource(R.raw.tshirts)
         } else {
             context.resources.openRawResource(R.raw.jacket)
@@ -57,7 +57,7 @@ class MeasurementRepository(
                 builder.append(line)
             }
             val json = Gson().fromJson(builder.toString(), Size::class.java)
-            val sizes = if (gender == "male") json.maleSize else json.femaleSize
+            val sizes = if (gender.lowercase() == "male") json.maleSize else json.femaleSize
             for (i in sizes.indices) {
                 if (sizes[i].size == size) {
                     return sizes[i]

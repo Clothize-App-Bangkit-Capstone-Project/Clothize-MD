@@ -18,28 +18,30 @@ import com.capstoneproject.clothizeapp.client.ui.client.detail.DetailActivity
 import com.capstoneproject.clothizeapp.databinding.ItemTailorBinding
 import com.google.android.gms.maps.model.LatLng
 
-class TailorAdapter : ListAdapter<Tailor, TailorAdapter.TailorViewHolder>(TailorDiffCallback()) {
+class TailorAdapter() :
+    ListAdapter<Tailor, TailorAdapter.TailorViewHolder>(DIFF_CALLBACK) {
+
+    private var originalList = mutableListOf<Tailor>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): TailorViewHolder {
         val binding = ItemTailorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TailorViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TailorViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: TailorViewHolder,
+        position: Int,
+    ) {
         val tailor = getItem(position)
-        if (tailor != null) {
-            holder.bind(tailor)
-        }
+        holder.bind(tailor)
     }
 
-    fun setData(newList : List<Tailor>){
-        submitList(newList.toMutableList() )
-    }
 
-    class TailorViewHolder(private val binding: ItemTailorBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TailorViewHolder(private val binding: ItemTailorBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private val geocoder = Geocoder(itemView.context)
         fun bind(tailor: Tailor) {
             val drawable = CircularProgressDrawable(itemView.context)
@@ -49,7 +51,7 @@ class TailorAdapter : ListAdapter<Tailor, TailorAdapter.TailorViewHolder>(Tailor
             drawable.start()
             binding.apply {
                 Glide.with(itemView)
-                    .load(tailor.photoTailor)
+                    .load(tailor.storeImg)
                     .placeholder(drawable)
                     .transition(
                         DrawableTransitionOptions.withCrossFade(
@@ -57,29 +59,33 @@ class TailorAdapter : ListAdapter<Tailor, TailorAdapter.TailorViewHolder>(Tailor
                         )
                     )
                     .into(rvPhotoTailor)
-                rvNameTailor.text = tailor.nameTailor
-                rvLocationTailor.text = getLocationName(LatLng(tailor.latitude, tailor.longitude))
+                rvNameTailor.text = tailor.storeName
+                rvLocationTailor.text = getLocationName(
+                    LatLng(
+                        tailor.location!!.latitude!!,
+                        tailor.location.longitude!!
+                    )
+                )
                 cardItemTailor.setOnClickListener {
-                    val intent = Intent(binding.cardItemTailor.context, DetailActivity::class.java)
-                    intent.putExtra("nameTailor", tailor.nameTailor)
-                    intent.putExtra("latitude", tailor.latitude)
-                    intent.putExtra("longitude", tailor.longitude)
-                    intent.putExtra("photoTailor", tailor.photoTailor)
-                    intent.putExtra("descriptionTailor", tailor.descriptionTailor)
+                    val intent = Intent(itemView.context, DetailActivity::class.java)
+                    intent.putExtra(DetailActivity.TAILOR_NAME, tailor.storeName)
+                    intent.putExtra(DetailActivity.TAILOR_LATITUDE, tailor.location.latitude)
+                    intent.putExtra(DetailActivity.TAILOR_LONGITUDE, tailor.location.longitude)
                     binding.cardItemTailor.context.startActivity(intent)
                 }
             }
 
         }
 
-        private fun getLocationName(location: LatLng): String{
+        private fun getLocationName(location: LatLng): String {
             try {
                 val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                 if (addresses != null) {
                     if (addresses.isNotEmpty()) {
                         return "${addresses[0].subAdminArea}"
                     } else {
-                        Toast.makeText(itemView.context, "Location not found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(itemView.context, "Location not found", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: Exception) {
@@ -91,13 +97,35 @@ class TailorAdapter : ListAdapter<Tailor, TailorAdapter.TailorViewHolder>(Tailor
         }
     }
 
-    class TailorDiffCallback : DiffUtil.ItemCallback<Tailor>() {
-        override fun areItemsTheSame(oldItem: Tailor, newItem: Tailor): Boolean {
-            return oldItem.id == newItem.id
+    fun searchTailor(query: String) {
+        val filteredList = originalList.filter { model ->
+            model.storeName!!.contains(query, ignoreCase = true)
+        }
+        submitList(filteredList)
+    }
+
+    fun setData(list: MutableList<Tailor>) {
+        originalList = list
+        submitList(originalList)
+    }
+
+    companion object {
+
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tailor>() {
+            override fun areItemsTheSame(
+                oldItem: Tailor,
+                newItem: Tailor,
+            ): Boolean {
+                return oldItem.storeName == newItem.storeName
+            }
+
+            override fun areContentsTheSame(
+                oldItem: Tailor,
+                newItem: Tailor,
+            ): Boolean {
+                return oldItem == newItem
+            }
         }
 
-        override fun areContentsTheSame(oldItem: Tailor, newItem: Tailor): Boolean {
-            return oldItem == newItem
-        }
     }
 }

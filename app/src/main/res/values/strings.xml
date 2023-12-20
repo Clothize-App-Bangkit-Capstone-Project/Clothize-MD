@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">ClothizeApp</string>
-    <string name="tv_Username">Username or Email</string>
+    <string name="app_name">Clothize</string>
+    <string name="tv_Username">Email</string>
     <string name="hint_username"><font size="14">Enter Your username</font></string>
     <string name="tv_pass">Password</string>
     <string name="hint_pass"><font size="14">Enter Your Password</font></string>

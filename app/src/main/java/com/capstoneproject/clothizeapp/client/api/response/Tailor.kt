@@ -1,10 +1,14 @@
 package com.capstoneproject.clothizeapp.client.api.response
 
+import com.google.firebase.firestore.GeoPoint
+
 data class Tailor(
-    val id: Int,
-    val nameTailor: String,
-    val photoTailor: String,
-    val latitude: Double,
-    val longitude: Double,
-    val descriptionTailor: String
-)
+    val description: String? = null,
+    val location: GeoPoint? = null,
+    val phone: String? = null,
+    val storeImg: String? = null,
+    val storeName: String? = null,
+){
+
+}
+

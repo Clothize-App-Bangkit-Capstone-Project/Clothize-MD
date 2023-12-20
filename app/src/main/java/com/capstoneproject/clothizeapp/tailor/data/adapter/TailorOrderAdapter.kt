@@ -8,15 +8,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.capstoneproject.clothizeapp.R
-import com.capstoneproject.clothizeapp.client.data.local.entity.OrderEntity
-import com.capstoneproject.clothizeapp.client.ui.client.order.DetailOrderActivity
+import com.capstoneproject.clothizeapp.client.api.response.Order
 import com.capstoneproject.clothizeapp.databinding.ItemOrderTailorBinding
+import com.capstoneproject.clothizeapp.tailor.ui.detail.TailorDetailOrderActivity
 
 class TailorOrderAdapter() :
-    ListAdapter<OrderEntity, TailorOrderAdapter.OrderViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<Order, TailorOrderAdapter.OrderViewHolder>(DIFF_CALLBACK) {
+
+    private var originalList = mutableListOf<Order>()
     class OrderViewHolder(private var binding: ItemOrderTailorBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(itemCount: Int, position: Int, order: OrderEntity) {
+        fun bind(itemCount: Int, position: Int, order: Order) {
 
             binding.apply {
                 val marginLayoutParams =
@@ -35,7 +37,7 @@ class TailorOrderAdapter() :
 
                 tvStatus.text = order.status
                 tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.black))
-                when(order.status.lowercase()){
+                when(order.status?.lowercase()){
                     "finished" -> {
                         tvStatus.background = itemView.context.resources.getDrawable(R.drawable.bg_green_finish)
                     }
@@ -68,26 +70,40 @@ class TailorOrderAdapter() :
         if (order != null) {
             holder.bind(itemCount, position, order)
             holder.itemView.setOnClickListener {
-                val intentToDetailOrder = Intent(holder.itemView.context, DetailOrderActivity::class.java)
-                intentToDetailOrder.putExtra(DetailOrderActivity.ID, order.id)
+                val intentToDetailOrder = Intent(holder.itemView.context, TailorDetailOrderActivity::class.java)
+                intentToDetailOrder.putExtra(TailorDetailOrderActivity.ORDER_ID, order)
                 holder.itemView.context.startActivity(intentToDetailOrder)
             }
         }
     }
 
+    fun searchOrder(query: String): Int {
+        val filteredList = originalList.filter { model ->
+            model.clientName!!.contains(query, ignoreCase = true)
+        }
+        submitList(filteredList)
+
+        return filteredList.size
+    }
+
+    fun setData(list: MutableList<Order>) {
+        originalList = list
+        submitList(originalList)
+    }
+
     companion object {
 
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<OrderEntity>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Order>() {
             override fun areItemsTheSame(
-                oldItem: OrderEntity,
-                newItem: OrderEntity,
+                oldItem: Order,
+                newItem: Order,
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.createdAt == newItem.createdAt
             }
 
             override fun areContentsTheSame(
-                oldItem: OrderEntity,
-                newItem: OrderEntity,
+                oldItem: Order,
+                newItem: Order,
             ): Boolean {
                 return oldItem == newItem
             }

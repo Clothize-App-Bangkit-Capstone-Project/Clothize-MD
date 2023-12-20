@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -18,7 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.capstoneproject.clothizeapp.R
-import com.capstoneproject.clothizeapp.client.data.local.entity.OrderEntity
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPrefViewModel
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferences
 import com.capstoneproject.clothizeapp.client.data.local.preferences.client.ClientPreferencesFactory
@@ -28,18 +28,36 @@ import com.capstoneproject.clothizeapp.client.ui.client.order.OrderViewModel
 import com.capstoneproject.clothizeapp.client.ui.client.order.OrderViewModelFactory
 import com.capstoneproject.clothizeapp.databinding.ActivityOrderFormBinding
 import com.capstoneproject.clothizeapp.utils.getImageUri
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class OrderFormActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOrderFormBinding
     private lateinit var clientPrefViewModel: ClientPrefViewModel
     private lateinit var orderViewModel: OrderViewModel
+    private lateinit var loadingDialog: AlertDialog
     private var spService = ""
     private var spSize = ""
     private var spColor = ""
     private var gender = ""
     private var currentImageUri: Uri? = null
+    private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
+    private var user: FirebaseUser? = null
 
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.TakePicture()
@@ -60,6 +78,7 @@ class OrderFormActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOrderFormBinding.inflate(layoutInflater)
@@ -68,7 +87,13 @@ class OrderFormActivity : AppCompatActivity() {
         init()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun init() {
+        db = Firebase.firestore
+        storage = FirebaseStorage.getInstance()
+        user = FirebaseAuth.getInstance().currentUser
+
+        loadingDialog = loadingDialog()
         orderViewModel = obtainViewModel(this)
         val pref = ClientPreferences.getInstance(application.dataStore)
         clientPrefViewModel =
@@ -154,7 +179,9 @@ class OrderFormActivity : AppCompatActivity() {
                     position: Int,
                     id: Long,
                 ) {
-                    spService = binding.orderOrderService.selectedItem.toString()
+                    if (binding.orderOrderService.selectedItem.toString() != "Service") {
+                        spService = binding.orderOrderService.selectedItem.toString()
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -203,7 +230,9 @@ class OrderFormActivity : AppCompatActivity() {
                     position: Int,
                     id: Long,
                 ) {
-                    spSize = binding.orderOrderSize.selectedItem.toString()
+                    if (binding.orderOrderSize.selectedItem.toString() != "Size") {
+                        spSize = binding.orderOrderSize.selectedItem.toString()
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -252,7 +281,9 @@ class OrderFormActivity : AppCompatActivity() {
                     position: Int,
                     id: Long,
                 ) {
-                    spColor = binding.orderOrderColor.selectedItem.toString()
+                    if (binding.orderOrderColor.selectedItem.toString() != "Color") {
+                        spColor = binding.orderOrderColor.selectedItem.toString()
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -297,24 +328,53 @@ class OrderFormActivity : AppCompatActivity() {
     private fun createOrder() {
 
         val tailor = intent.getStringExtra(TAILOR)
-        val clientName = intent.getStringExtra(CLIENT_NAME)
+        val tailorPhone = intent.getStringExtra(TAILOR_PHONE)
+        val tailorId = intent.getStringExtra(TAILOR_ID)
+        val clientName = binding.orderOrderName.text.toString()
+        val clientPhone = binding.orderOrderPhone.text.toString()
 
         if (checkFillOrNot()) {
-            if (tailor != null && clientName != null) {
+            if (tailor != null) {
+                loadingDialog.show()
                 binding.apply {
-                    val orderEntity = OrderEntity(
-                        tailorName = tailor,
-                        clientName = clientName,
-                        gender = gender,
-                        service = spService,
-                        size = spSize,
-                        color = spColor,
-                        qty = orderQuantity.text.toString().toInt(),
-                        estimation = orderEstimated.text.toString().toInt(),
-                        orderDate = getDateNow()
-                    )
-                    orderViewModel.createOrder(orderEntity)
-                    successDialog()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val urlPhoto = saveImage()
+
+                        val addOrder = hashMapOf(
+                            "clientName" to clientName,
+                            "clientPhone" to clientPhone,
+                            "tailorName" to tailor,
+                            "tailorPhone" to tailorPhone,
+                            "gender" to gender,
+                            "service" to spService,
+                            "size" to spSize,
+                            "color" to spColor,
+                            "qty" to orderQuantity.text.toString().toInt(),
+                            "estimation" to orderEstimated.text.toString().toInt(),
+                            "status" to "Pending",
+                            "comment" to "",
+                            "price" to 0,
+                            "createdAt" to FieldValue.serverTimestamp(),
+                            "urlImg" to urlPhoto,
+                            "isTailorRejected" to false,
+                            "clientId" to user!!.uid,
+                            "tailorId" to tailorId,
+                        )
+
+                        db.collection("orders").add(addOrder)
+                            .addOnSuccessListener { docs ->
+                                loadingDialog.dismiss()
+                                successDialog()
+                            }.addOnFailureListener {
+                                loadingDialog.dismiss()
+                                Toast.makeText(
+                                    this@OrderFormActivity,
+                                    "There is problem to add order!",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                    }
                 }
             }
         } else {
@@ -322,13 +382,39 @@ class OrderFormActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getDateNow(): String{
-        val currentTime = LocalDateTime.now()
 
-        // Format waktu menggunakan DateTimeFormatter
-        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        return currentTime.format(formatter).toString()
+    private suspend fun saveImage(): String = withContext(Dispatchers.IO) {
+        val storageRef = storage.reference
+        val filename = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val imageRef = storageRef.child("images/order/${filename}.jpg")
+        var imageUrl = ""
+
+        currentImageUri?.let {
+            try {
+                // Gunakan async untuk membuat saveImage menunggu proses upload
+                val uploadTask = async {
+                    imageRef.putFile(it).await()
+                }
+
+                uploadTask.await() // Menunggu proses upload selesai
+
+                val downloadUrl = imageRef.downloadUrl.await()
+                imageUrl = downloadUrl.toString()
+                Log.d("TAG", "saveImage: $imageUrl")
+
+            } catch (exception: Exception) {
+                // Handle kesalahan di sini
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@OrderFormActivity,
+                        "There is a problem to add the image!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        imageUrl
     }
 
     private fun checkFillOrNot(): Boolean {
@@ -339,7 +425,7 @@ class OrderFormActivity : AppCompatActivity() {
                             orderOrderPhone.text.toString().isNotEmpty() &&
                             gender != "" && spService != "" && spSize != "" &&
                             spColor != "" && orderQuantity.text.toString().isNotEmpty() &&
-                            orderEstimated.text.toString().isNotEmpty()
+                            orderEstimated.text.toString().isNotEmpty() && currentImageUri != null
                     )
         }
     }
@@ -361,9 +447,20 @@ class OrderFormActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadingDialog(): AlertDialog {
+        val view = layoutInflater.inflate(R.layout.dialog_loading, null)
+        val builder = AlertDialog.Builder(this)
+        builder.setView(view)
+
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        return dialog
+    }
+
 
     companion object {
         const val TAILOR = "tailor"
-        const val CLIENT_NAME = "username"
+        const val TAILOR_PHONE = "tailor_phone"
+        const val TAILOR_ID = "tailor_id"
     }
 }

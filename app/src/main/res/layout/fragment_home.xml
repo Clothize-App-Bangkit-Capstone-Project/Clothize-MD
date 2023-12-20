@@ -67,8 +67,22 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/rv_tailor"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_subtitleHome" />
+
+        <TextView
+            android:id="@+id/title_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tailor data not found!"
+            android:textColor="@color/red_rejected"
+            android:fontFamily="@font/poppins_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@id/edt_search_tailor"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_tailor"
@@ -79,6 +93,7 @@
             android:overScrollMode="never"
             android:paddingBottom="100dp"
             android:scrollbars="none"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edt_search_tailor"

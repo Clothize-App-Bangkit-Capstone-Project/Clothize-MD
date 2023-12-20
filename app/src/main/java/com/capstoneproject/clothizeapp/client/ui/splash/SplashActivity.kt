@@ -55,7 +55,7 @@ class SplashActivity : AppCompatActivity() {
         val intentToMainTailor = Intent(this, MainTailorActivity::class.java)
         val intentToLogin = Intent(this, LoginActivity::class.java)
         CoroutineScope(Dispatchers.Main).launch {
-            delay(3000)
+            delay(2000)
             clientPrefViewModel.getSessionUser().observe(this@SplashActivity) { session ->
                 if (session != null) {
                     startActivity(intentToMainClient)
@@ -79,46 +79,48 @@ class SplashActivity : AppCompatActivity() {
 
     private fun playAnimation() {
         // geser atas cloth sebesar 100dp dan tampilin ing
-        val clothAnim = AnimationPackage.translateY(binding.cloth, 700, 0f, -100f)
-        val ingAnimY = AnimationPackage.translateY(binding.ing, 700, 0f, -100f)
-        val ingAnim = AnimationPackage.fadeIn(binding.ing, 500)
+//        val clothAnim = AnimationPackage.translateY(binding.cloth, 700, 0f, -100f)
+//        val ingAnimY = AnimationPackage.translateY(binding.ing, 700, 0f, -100f)
+//        val ingAnim = AnimationPackage.fadeIn(binding.ing, 500)
+//
+//        // show size from left dan hide ize
+//        val izeAnim = AnimationPackage.fadeOut(binding.ize, 700)
+//        val sAnim = AnimationPackage.fadeIn(binding.s, 500)
+//        val sAnimX = AnimationPackage.translateX(binding.s, 700, -30f, 0f)
+//
+//        // tampilin App
+//        val appAnim = AnimationPackage.fadeIn(binding.app, 500)
+//        // tampilin box
+//        val boxAnim = AnimationPackage.fadeIn(binding.box, 500)
+//
+//        val ingAnimSet = AnimatorSet().apply {
+//            playSequentially(
+//                ingAnimY,
+//                ingAnim,
+//            )
+//        }
+//
+//        val clothingAnim = AnimatorSet().apply {
+//            play(clothAnim).with(ingAnimSet)
+//        }
+//
+//        val sizeAnim = AnimatorSet().apply {
+//            play(sAnim).with(sAnimX)
+//        }
 
-        // show size from left dan hide ize
-        val izeAnim = AnimationPackage.fadeOut(binding.ize, 700)
-        val sAnim = AnimationPackage.fadeIn(binding.s, 500)
-        val sAnimX = AnimationPackage.translateX(binding.s, 700, -30f, 0f)
 
-        // tampilin App
-        val appAnim = AnimationPackage.fadeIn(binding.app, 500)
-        // tampilin box
-        val boxAnim = AnimationPackage.fadeIn(binding.box, 500)
-
-        val ingAnimSet = AnimatorSet().apply {
-            playSequentially(
-                ingAnimY,
-                ingAnim,
-            )
-        }
-
-        val clothingAnim = AnimatorSet().apply {
-            play(clothAnim).with(ingAnimSet)
-        }
-
-        val sizeAnim = AnimatorSet().apply {
-            play(sAnim).with(sAnimX)
-        }
-
-
+        val logoAnim = AnimationPackage.fadeIn(binding.imgLogo, 1000)
         AnimatorSet().apply {
             playSequentially(
-                clothingAnim,
-                izeAnim,
-                sizeAnim,
-                appAnim,
-                boxAnim,
+                logoAnim
+//                clothingAnim,
+//                izeAnim,
+//                sizeAnim,
+//                appAnim,
+//                boxAnim,
             )
             CoroutineScope(Dispatchers.Main).launch {
-                delay(1000)
+                delay(500)
                 start()
             }
         }
