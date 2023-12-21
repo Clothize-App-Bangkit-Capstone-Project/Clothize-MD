@@ -119,6 +119,7 @@ class HomeTailorFragment : Fragment() {
                         createdAt = order.getTimestamp("createdAt")!!.toDate(),
                         comment = order.data!!["comment"].toString(),
                         urlImg = order.data!!["urlImg"].toString(),
+                        isTailorRejected = order.getBoolean("isTailorRejected"),
                         clientId = order.data!!["userId"].toString(),
                         tailorId = order.data!!["tailorId"].toString(),
                     )

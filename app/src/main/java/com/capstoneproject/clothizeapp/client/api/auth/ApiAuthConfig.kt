@@ -20,7 +20,7 @@ class ApiAuthConfig {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
-            return retrofit.create(com.capstoneproject.clothizeapp.client.api.auth.ApiAuthService::class.java)
+            return retrofit.create(ApiAuthService::class.java)
         }
     }
 }
